@@ -13,9 +13,6 @@ require('app-module-path').addPath(__dirname);
 
 dotenv.config();
 
-
-
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
