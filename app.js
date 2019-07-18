@@ -9,7 +9,7 @@ const dotenv = require('dotenv');
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/Users/users');
 const app = express();
-require('app-module-path').addPath(`${__dirname}`);
+require('app-module-path').addPath(__dirname);
 
 dotenv.config();
 
