@@ -15,6 +15,7 @@ const MentorSchema = new mongoose.Schema ({
         type: Number,
         default: 1
     },
+    /*
     pseudonym: {
         type: String,
         es_indexed: true,   //ELASTICSEARCH INDEX
@@ -22,10 +23,10 @@ const MentorSchema = new mongoose.Schema ({
         min: 1,
         default: 'Piccione Anonimo',
         required: true
-    }});
-
+    }
+    */
+});
 
 // Using Mongoosastic to replicate on ElasticSearch
-
 
 module.exports.mentorSchema = MentorSchema;

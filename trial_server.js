@@ -100,7 +100,6 @@ app.post('/signup/mentee', function (request, response) {
         .catch((error) => console.log(error))
 });
 
-
 // Public route for Login
 //TODO: login and authenticated functions.
 app.post('/login',function (request, response) {
@@ -108,7 +107,9 @@ app.post('/login',function (request, response) {
     // Retrieve email and password from body
     var body = _.pick(request.body, ['email','password']);
     // Try to find user with this email and password
-    User.checkEmailPassword(body.email, body.password).then((token)=>response.json(token)).catch(console.log('sono fuori'))
+    User.checkEmailPassword(body.email, body.password)
+        .then((token)=>response.json(token))
+        .catch(console.log('sono fuori'))
 });
 
 
