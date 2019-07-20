@@ -5,6 +5,8 @@ let router = express.Router();
 const {check, validationResult} = require('express-validator');
 const jwt = require('../../controller/authentication/jwt');
 
+const {User,Mentor,Mentee} = require('./../../models/user.js');
+
 let signupMentor = require("./stubs/signupMentor");
 let explore = {};
 
