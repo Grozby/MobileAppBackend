@@ -19,5 +19,4 @@ const schoolDegreeSchema = new mongoose.Schema ({
     }
 });
 
-
 module.exports.schoolDegreeSchema = schoolDegreeSchema;

@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const tagSchema = new mongoose.Schema ({
     tag: {
         type: String,
-        enum: ['Software Engineer','Full-Stack','Front-end','Back-end',
+        enum: ['Software Engineer','Full-Stack','Front-End','Back-End',
             'Machine Learning','Python','C++','iOS','Android','Mobile Dev'],
         required: true
     }

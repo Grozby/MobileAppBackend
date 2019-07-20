@@ -11,5 +11,4 @@ const institutionSchema = new mongoose.Schema ({
     },
 });
 
-
 module.exports.institutionSchema = institutionSchema;

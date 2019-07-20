@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 require('mongoose-type-url');
 const validator = require('validator');
@@ -11,7 +10,6 @@ const experience = require('./experience');
 
 //const Constants = require('./../../utilities/constants');
 var ObjectId = require('mongoose').Types.ObjectId;
-
 
 /////////////// SECRET SALT ADDED TO THE JST TOKEN SIGNATURE //////////////
 //const secret = Constants.authenticationTokenSecret;
@@ -114,15 +112,15 @@ var UserSchema = new mongoose.Schema({
         type: [enums.tagSchema]
     }
     // notification
-
 },options);
 
 // Schema method to find an User starting from its token
+UserSchema.statics.exploreSection = function(){
+    return User.find({kind:'Mentor'},{ email:0,password:0,pseudonym:0,tokens:0,cost_in_tokens:0});
+};
 
-
-UserSchema.statics.findAllMentors = function(){
-    var queryResponse =  User.find({kind:'Mentor'});
-    return JSON.stringify(queryResponse)
+UserSchema.statics.getProfile = function(id){
+    return User.find({_id:id},{ email:0,password:0,pseudonym:0,tokens:0,cost_in_tokens:0});
 };
 
 UserSchema.statics.findByToken = function (token) {

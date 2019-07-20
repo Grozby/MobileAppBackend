@@ -77,7 +77,6 @@ router.get("/profile", [jwt.verifyJwt], function (req, res, next) {
     return res.json(getProfileInfo(res.locals.payload["email"]));
 });
 
-
 router.get("/explore", [jwt.verifyJwt], function (req, res, next) {
     if (process.env.NODE_ENV)
         res.json(signupMentor);

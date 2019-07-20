@@ -56,84 +56,55 @@ var authenticate = function (request, response, next) {
 ////////////    ROUTES  ////////////////////
 
 // Public route for registering Mentor
-app.get('/find/allmentors', function (request,response) {
-    console.log("Received Request all mentros form"+request.connection.remoteAddress)
-    console.log(User.findAllMentors());
+app.get('/explore', function (request,response) {
+    console.log("Received Request explore form"+request.connection.remoteAddress);
+    User.exploreSection()
+        .then((exploreResponse) => response.json(exploreResponse))
+        .catch((error) => console.log(error))
+});
+
+app.get('/profile/:id',function (request,response) {
+    //localhost:3000/profile/5d32db9dd85956056f9a0f53
+    const _id = request.params.id;
+    User.getProfile(_id)
+        .then((profileResponse)=> response.json(profileResponse))
+        .catch((error)=>console.log(error))
+});
+
+app.get('/profile/me', function (request,response) {
+    //TODO: authenticated request for getting the profile
 });
 
 app.post('/signup/mentor', function (request, response) {
     console.log("Received Mentor registration request from " + request.connection.remoteAddress);
 
     // Retrieving data that we need from request (email, password...)
-    var body = _.pick(request.body, ['email','password','name','surname','referralCompany','workingRole','state','linkedin','phoneNumber']);
+    var body = _.pick(request.body, ['email','password','name','surname','referralCompany','workingRole','state','linkedin','phoneNumber','experienceList','educationList','tagList','questionList']);
     var mentor = new Mentor(body);
 
     // Save to db
     mentor.save()
-    /*
-    mentor.save().then(function () {
-        // Generating authentication token for this user login session
-        return mentor.generateAuthToken();
-    }).then( function (token) {
-        //Responding setting the header as the token
-        response.header('x-auth', token).send(mentor);
-        // NOTE do not send back the json with the token
-    }).catch(function (err) {
-        // Managing errors:
-        errMsgs = [];
-        try{
-            if(!err.errors)
-                throw new err;
-            // Case of errors in body of request (missing keys etc...)
-            for(var property in err.errors){
-                errMsgs.push(err.errors[property].message);
-            }
-            response.status(400).send(JSON.stringify({errMsgs}));
-        } catch (e) {
-            // Case of DB error + other errors
-            errMsgs.push('User might already be registered');
-            response.status(400).send(JSON.stringify({errMsgs}));
-        }
-
-    })*/
-
+        .then((exploreResponse) => response.json(exploreResponse))
+        .catch((error) => console.log(error))
 });
 
 // Public route for registering Mentee
 app.post('/signup/mentee', function (request, response) {
     console.log("Received Mentee registration request from " + request.connection.remoteAddress);
     // Retrieving data that we need from request (email, password...)
-    var body = _.pick(request.body, ['email','password','name','surname','linkedin','phoneNumber']);
+    var body = _.pick(request.body, ['email','password','name','surname','state','phoneNumber','experienceList','educationList','tagList','questionList']);
     var mentee = new Mentee(body);
 
-    // Save to db
-    mentee.save().then(function () {
-        // Generating authentication token for this user login session
-        return mentee.generateAuthToken();
-    }).then( function (token) {
-        //Responding setting the header as the token
-        response.header('x-auth', token).send(mentee);
-        // NOTE do not send back the json with the token
-    }).catch(function (err) {
-        // Managing errors:
-        errMsgs = [];
-        try{
-            if(!err.errors)
-                throw new err;
-            // Case of errors in body of request (missing keys etc...)
-            for(var property in err.errors){
-                errMsgs.push(err.errors[property].message);
-            }
-            response.status(400).send(JSON.stringify({errMsgs}));
-        } catch (e) {
-            // Case of DB error + other errors
-            errMsgs.push('User might already be registered');
-            response.status(400).send(JSON.stringify({errMsgs}));
-        }
-
-    })
+    mentee.save()
+        .then((exploreResponse) => response.json(exploreResponse))
+        .catch((error) => console.log(error))
 });
+
+
+
+
 // Public route for Login
+//TODO: login and authenticated functions.
 app.post('/login',function (request, response) {
     // First, check if body contains all info that we need
     errMsgs = [];

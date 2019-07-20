@@ -12,11 +12,6 @@ const MentorSchema = new mongoose.Schema ({
         es_indexed: true,   //ELASTICSEARCH INDEX
         required: [true, 'To become a mentor you must specify your working position']
     },
-    state: {
-        type: String,
-        es_indexed: true,   //ELASTICSEARCH INDEX
-        required: [true, 'To become a mentor you must specify the State you are working in']
-    },
     cost_in_tokens: {
         type: Number,
         default: 1
