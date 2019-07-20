@@ -114,6 +114,8 @@ var UserSchema = new mongoose.Schema({
     // notification
 },options);
 
+
+
 // Schema method to find an User starting from its token
 UserSchema.statics.exploreSection = function(){
     return User.find({kind:'Mentor'},{ email:0,password:0,pseudonym:0,tokens:0,cost_in_tokens:0});
@@ -142,12 +144,28 @@ UserSchema.statics.findByToken = function (token) {
 };
 
 // Schema method to find an user using its email and password
-UserSchema.statics.checkEmailPassword = function(email, password){
-    var User = this;
-    // Query db for that email
-    return User.findOne({email})
-        .then((user)=> bcrypt.compare(password, user.password))
-};
+
+UserSchema.statics.findByCredentials =  (email, password) => {
+    return new Promise((resolve,reject)=>{
+        user = User.findOne({email:email },function(err,user){
+            if (user!==null){
+                bcrypt.compare(password, user.password,function(err,res){
+                    if (res)
+                        resolve(user)
+                    else if (!res)
+                        reject('Password does not match')
+                })
+            } else {
+                reject('User not present in db')
+            }
+        })
+    })
+}
+
+
+
+
+
 
 // Schema method to find a single user, given its id
 UserSchema.statics.findById = function(userId) {

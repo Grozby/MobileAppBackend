@@ -36,7 +36,6 @@ router.post("/signup/mentor",
               });
     });
 
-
 router.post("/signup/mentee",
     [
         check('name'),

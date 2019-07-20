@@ -102,14 +102,27 @@ app.post('/signup/mentee', function (request, response) {
 
 // Public route for Login
 //TODO: login and authenticated functions.
+/*
+app.post('/login',  (req, res) => {
+    var body = _.pick(req.body, ['email','password']);
+    try {
+        const user =  User.findByCredentials(body.email, body.password);
+        res.send(user)
+    } catch (e) {
+        res.status(400).send()
+    }
+})
+*/
+
 app.post('/login',function (request, response) {
     // First, check if body contains all info that we need
     // Retrieve email and password from body
-    var body = _.pick(request.body, ['email','password']);
     // Try to find user with this email and password
-    User.checkEmailPassword(body.email, body.password)
-        .then((token)=>response.json(token))
-        .catch(console.log('sono fuori'))
+    var body = _.pick(request.body, ['email','password']);
+
+    User.findByCredentials(body.email, body.password)
+        .then((resp)=>response.json(resp))
+        .catch((e)=>console.log(e))
 });
 
 
