@@ -67,7 +67,7 @@ var UserSchema = new mongoose.Schema({
         min: 1,
         max: 1000,
         trim: true,
-        default: `Hi I'm excited to be here !`
+        default: `Hi I'm excited to be here!`
     },
     profile_picture: {
         type: mongoose.SchemaTypes.Url,
