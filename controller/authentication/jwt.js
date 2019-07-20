@@ -10,8 +10,8 @@ const options = {
     algorithm: "RS256"
 };
 
-exports.login = function (credentials) {
-    return jwt.sign(credentials, privateKey, options);
+exports.login = function (payload) {
+    return jwt.sign(payload, privateKey, options);
 };
 
 exports.verifyJwt = (req, res, next) => {
@@ -24,7 +24,7 @@ exports.verifyJwt = (req, res, next) => {
 
     try {
         let payload = jwt.verify(token, publicKey, options);
-        let allowedKeys = ["email", "password"];
+        let allowedKeys = ["email"];
         res.locals.payload =
             Object.keys(payload)
                 .filter(key => allowedKeys.includes(key))

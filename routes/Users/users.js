@@ -2,57 +2,66 @@
 
 let express = require('express');
 let router = express.Router();
+const lodash = require('lodash');
 const {check, validationResult} = require('express-validator');
 const jwt = require('../../controller/authentication/jwt');
 
-const {User,Mentor,Mentee} = require('./../../models/user.js');
+const {User, Mentor, Mentee} = require('../../models/user.js');
+const {Contact} = require('../../models/contact');
+const {mongoose} = require('../../db/mongoose.js');
+mongoose.Promise = require('bluebird');
 
-let signupMentor = require("./stubs/signupMentor");
-let explore = {};
-
-router.get("/signup/mentee",
+//-------------------
+//  Registration
+//-------------------
+router.post("/signup/mentor",
     [
         check('name'),
         check('surname'),
         check('email').isEmail(),
         check('password').isLength({min: 8}),
+        check('referralCompany'),
         bodyValidated
     ],
-    function (req, res, next) {
-        if (!isUserPresent(req.body["email"])) {
-            registerMentee(req.body);
-            return res.sendStatus(200);
-        } else {
-            return res.sendStatus(409)
-                      .json({
-                          message: "Email already used!"
-                      })
-        }
+    function (req, res) {
+        req.body = lodash.pick(req.body, ['email', 'password', 'name', 'surname', 'referralCompany']);
+        let mentor = new Mentor(req.body);
+
+        mentor.save()
+              .then(() => { //if user not present in the Database, we add it
+                  return res.sendStatus(201);
+              })
+              .catch(error => { //Otherwise, we proceed in sending what went wrong.
+                  return res.status(400).json(error);
+              });
     });
 
-router.get("/signup/mentor",
+
+router.post("/signup/mentee",
     [
         check('name'),
         check('surname'),
         check('email').isEmail(),
         check('password').isLength({min: 8}),
-        check('company'),
         bodyValidated
     ],
-    function (req, res, next) {
-        if (!isUserPresent(req.body["email"]) && isEmailCompany(req.body["email"])) {
-            registerMentor(req.body);
-            return res.sendStatus(200);
-        } else {
-            return res.sendStatus(409)
-                      .json({
-                          message: "Email already used!"
-                      })
-        }
+    function (req, res) {
+        req.body = lodash.pick(req.body, ['email', 'password', 'name', 'surname']);
+        let mentee = new Mentee(req.body);
+
+        mentee.save()
+              .then(() => { //if user not present in the Database, we add it
+                  return res.sendStatus(201);
+              })
+              .catch(error => { //Otherwise, we proceed in sending what went wrong.
+                  return res.status(400).json(error);
+              });
     }
 );
 
-
+//-------------------
+//  Login
+//-------------------
 router.post("/login",
     [
         check('email').isEmail(),
@@ -60,15 +69,25 @@ router.post("/login",
         bodyValidated
     ],
     function (req, res, next) {
-        if (isUserPresent(req.body))
-            return res.json({
-                "token": jwt.login(req.body)
+        User.findByCredentials(req.body["email"], req.body["password"])
+            .then(result => {
+                let payload = {
+                    "email": result["email"]
+                };
+                return res.json({
+                    "token": jwt.login(payload)
+                });
+            })
+            .catch(() => {
+                return res.status(401).json({
+                    "error": "Incorrect username or password."
+                });
             });
-        else
-            return res.sendStatus(401);
     });
 
-
+//---------------------
+//  Profile Information
+//---------------------
 router.post("/minimalprofile", [jwt.verifyJwt], function (req, res, next) {
     res.json(res.locals.payload);
 });
@@ -100,14 +119,8 @@ function bodyValidated(req, res, next) {
     next();
 }
 
-//---------------------------
-//  STUB FUNCTIONS
-//---------------------------
-function isUserPresent(email) {
-    return true;
-}
 
-function isEmailCompany(email){
+function isEmailCompany(email) {
     return true;
 }
 
@@ -119,6 +132,6 @@ function registerMentor(body) {
 
 }
 
-function getProfileInfo(email){
+function getProfileInfo(email) {
 
 }
