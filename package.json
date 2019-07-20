@@ -20,6 +20,8 @@
     "mongoose": "^5.6.5",
     "mongoose-type-url": "^1.0.6",
     "morgan": "~1.9.1",
-    "pug": "^2.0.4"
+    "pug": "^2.0.4",
+    "lodash": "latest",
+    "bluebird": "latest"
   }
 }
