@@ -1,0 +1,33 @@
+{
+	"email": "giovannoneasdasd@google.com",
+	"password": "pasadawd",
+	"name":"asd",
+	"surname": "Di Palo",
+	"location":"Chicago, IL",
+	"experienceList":[
+		{
+			"fromDate": "2012-04",
+			"company":{"name":"Google"},
+			"role":"Software Engineer"
+		}
+		],
+	"educationList":[
+		{
+			"fromDate": "2012-04",
+			"university":{"name":"Univeristy of Illinois at Chicago"},
+			"degreeType":"M.S.",
+			"major":"Computer Science"
+		}
+	],
+	"questionList":[
+		{
+			"question":"What are your favourite programming languages?",
+			"answer": "Java, Python, C++"
+		}
+	],
+	"tagList":
+	[
+	{"tag":"Software Engineer"},{"tag":"Front-End"}
+		]
+
+}

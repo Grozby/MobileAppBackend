@@ -1,0 +1,35 @@
+{
+	"email": "asdasdada@google.com",
+	"password": "pasadawd",
+	"name":"Giovannone",
+	"surname": "Giovannino",
+	"referralCompany":"Google",
+	"workingRole":"Software Engineer",
+	"state":"Mountain View, CA",
+	"experienceList":[
+		{
+			"fromDate": "2012-04",
+			"company":{"name":"Google"},
+			"role":"Software Engineer"
+		}
+		],
+	"educationList":[
+		{
+			"fromDate": "2012-04",
+			"university":{"name":"Stanford University"},
+			"degreeType":"Ph.D",
+			"major":"Computer Science"
+		}
+	],
+	"questionList":[
+		{
+			"question":"What are your favourite programming languages?",
+			"answer": "Java, Python, C++"
+		}
+	],
+	"tagList":
+	[
+	{"tag":"Software Engineer"},{"tag":"Front-End"}
+		]
+
+}

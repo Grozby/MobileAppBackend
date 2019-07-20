@@ -101,34 +101,14 @@ app.post('/signup/mentee', function (request, response) {
 });
 
 
-
-
 // Public route for Login
 //TODO: login and authenticated functions.
 app.post('/login',function (request, response) {
     // First, check if body contains all info that we need
-    errMsgs = [];
-    if(!request.body.email)
-        errMsgs.push('Email is required');
-    if(!request.body.password)
-        errMsgs.push('Password is required');
-    if(errMsgs.length !== 0){
-        response.status(400).send(JSON.stringify({errMsgs}));
-        return;
-    }
     // Retrieve email and password from body
     var body = _.pick(request.body, ['email','password']);
     // Try to find user with this email and password
-    User.findByCredentials(body.email, body.password).then(function (user) {
-        // Generate token for this login
-        user.generateAuthToken().then(function (token) {
-            response.header('x-auth', token).send(user)
-        });
-    }).catch(function (err) {
-        // If we're here, then the user was not found in the DB
-        errMsgs.push('Wrong email or password');
-        response.status(400).send(JSON.stringify({errMsgs}));
-    });
+    User.findByCredentials(body.email, body.password).then((token)=>response.json(token)).catch(console.log('sono fuori'))
 });
 
 

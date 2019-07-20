@@ -141,26 +141,12 @@ UserSchema.statics.findByToken = function (token) {
     });
 };
 
-
 // Schema method to find an user using its email and password
 UserSchema.statics.findByCredentials = function(email, password){
     var User = this;
     // Query db for that email
-    return User.findOne({email}).then(function (user) {
-        // If user does not exists...
-        if (!user){
-            return Promise.reject();
-        }
-        // Otherwise, if it exists, compare crypted password
-        return new Promise(function (resolve, reject) {
-            bcrypt.compare(password, user.password, function (error, res) {
-                if(res)
-                    resolve(user);
-                else
-                    reject();
-            });
-        });
-    });
+    return User.findOne({email})
+        .then((user)=> bcrypt.compare(password, user.password))
 };
 
 // Schema method to find a single user, given its id
