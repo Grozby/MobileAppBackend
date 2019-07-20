@@ -142,7 +142,7 @@ UserSchema.statics.findByToken = function (token) {
 };
 
 // Schema method to find an user using its email and password
-UserSchema.statics.findByCredentials = function(email, password){
+UserSchema.statics.checkEmailPassword = function(email, password){
     var User = this;
     // Query db for that email
     return User.findOne({email})

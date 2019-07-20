@@ -9,8 +9,7 @@ const MentorSchema = new mongoose.Schema ({
     },
     workingRole: {
         type: String,
-        es_indexed: true,   //ELASTICSEARCH INDEX
-        required: [true, 'To become a mentor you must specify your working position']
+        es_indexed: true   //ELASTICSEARCH INDEX
     },
     cost_in_tokens: {
         type: Number,
