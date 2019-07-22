@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://159.89.15.169:27017/mobileapp');
+mongoose.connect('mongodb://159.89.15.169:27017/mobileapp', {useNewUrlParser: true});
 
 module.exports = {
     mongoose

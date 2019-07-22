@@ -3,6 +3,8 @@ require('mongoose-type-url');
 const validator = require('validator');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+const findOrCreate = require('mongoose-findorcreate');
+
 const mentor = require('./mentor');
 const mentee = require('./mentee');
 const enums = require('./enums');
@@ -52,6 +54,10 @@ var UserSchema = new mongoose.Schema({
         type: String,
         default: 'US'
     },
+    googleId: {
+        type: String,
+        unique: true
+    },
     tokens: [{      // Array composed of elements (access,token)
         access: {
             type: String,
@@ -92,7 +98,7 @@ var UserSchema = new mongoose.Schema({
     phoneNumber: {
         type: String,
         validate: {
-            validator: function(v) {
+            validator: function (v) {
                 return /\d{3}-\d{3}-\d{4}/.test(v);
             },
             message: props => `${props.value} is not a valid phone number!`
@@ -105,24 +111,24 @@ var UserSchema = new mongoose.Schema({
     experienceList: {
         type: [experience.Work.schema]
     },
-    questionList:{
+    questionList: {
         type: [enums.questionSchema]
     },
-    tagList:{
+    tagList: {
         type: [enums.tagSchema]
     }
     // notification
-},options);
+}, options);
 
 
 
 // Schema method to find an User starting from its token
-UserSchema.statics.exploreSection = function(){
-    return User.find({kind:'Mentor'},{ email:0,password:0,pseudonym:0,tokens:0,cost_in_tokens:0});
+UserSchema.statics.exploreSection = function () {
+    return User.find({kind: 'Mentor'}, {email: 0, password: 0, pseudonym: 0, tokens: 0, cost_in_tokens: 0});
 };
 
-UserSchema.statics.getProfile = function(id){
-    return User.find({_id:id},{ email:0,password:0,pseudonym:0,tokens:0,cost_in_tokens:0});
+UserSchema.statics.getProfile = function (id) {
+    return User.find({_id: id}, {email: 0, password: 0, pseudonym: 0, tokens: 0, cost_in_tokens: 0});
 };
 
 UserSchema.statics.findByToken = function (token) {
@@ -130,9 +136,9 @@ UserSchema.statics.findByToken = function (token) {
     var decoded;
 
     // We need a try catch block because if token is not valid, jwt launches an error
-    try{
+    try {
         decoded = jwt.verify(token, secret);
-    } catch(err){
+    } catch (err) {
         return Promise.reject();
     }
     // Quering the DB and returning the user
@@ -144,6 +150,12 @@ UserSchema.statics.findByToken = function (token) {
 };
 
 // Schema method to find an user using its email and password
+UserSchema.statics.checkEmailPassword = function (email, password) {
+    var User = this;
+    // Query db for that email
+    return User.findOne({email})
+               .then((user) => bcrypt.compare(password, user.password))
+};
 
 UserSchema.statics.findByCredentials =  (email, password) => {
     return new Promise((resolve,reject)=>{
@@ -168,12 +180,12 @@ UserSchema.statics.findByCredentials =  (email, password) => {
 
 
 // Schema method to find a single user, given its id
-UserSchema.statics.findById = function(userId) {
+UserSchema.statics.findById = function (userId) {
     return User.findOne({
         _id: userId
     }).then(function (foundUser) {
         return new Promise(function (resolve, reject) {
-            if(!foundUser)
+            if (!foundUser)
                 reject("User was not found by ID");
             else
                 resolve(foundUser);
@@ -184,38 +196,38 @@ UserSchema.statics.findById = function(userId) {
 };
 
 // Schema method to find a single user, given its id
-UserSchema.statics.findByIdCustom = function(userId) {
+UserSchema.statics.findByIdCustom = function (userId) {
     return User.find({
         _id: userId
     }).limit(1).then(function (foundUser) {
-            if(!foundUser)
-                return Promise.reject("User was not found by ID");
-            else
-                return Promise.resolve(foundUser);
+        if (!foundUser)
+            return Promise.reject("User was not found by ID");
+        else
+            return Promise.resolve(foundUser);
     }).catch(function (err) {
         return Promise.reject(err);
     });
 };
 
 // Schema method to find a list of users starting from their _id
-UserSchema.statics.findByIdSorted = function(idList){
+UserSchema.statics.findByIdSorted = function (idList) {
     // Query Mongo for those ids
     return User.find({
-        '_id': { $in : idList}
+        '_id': {$in: idList}
     }).then(function (userList) {
         // If no results were returned by Mongo
-        if(!userList)
+        if (!userList)
             return Promise.reject();
         // Otherwise, return sorted result according to Elastic
         return new Promise(function (resolve, reject) {
             resultArray = [];
             idList.forEach(function (id) {      // For each id returned by Elastic, find its corresponding into the Mongo result objects
                 userList.forEach(function (user) {
-                    if(user._doc._id == id)
+                    if (user._doc._id == id)
                         resultArray.push(user);
                 })
             });
-            if(resultArray.length > 0)
+            if (resultArray.length > 0)
                 resolve(resultArray);
             else
                 reject();
@@ -225,7 +237,7 @@ UserSchema.statics.findByIdSorted = function(idList){
 
 
 // Schema method to update the number of tokens for a specific mentee
-mentee.menteeSchema.statics.updateTokensWallet = function(menteeId, numTokens){
+mentee.menteeSchema.statics.updateTokensWallet = function (menteeId, numTokens) {
     menteeId = menteeId.toString();
     return Mentee.updateOne({_id: menteeId}, {
         tokens_wallet: numTokens
@@ -237,7 +249,7 @@ mentee.menteeSchema.statics.updateTokensWallet = function(menteeId, numTokens){
 };
 
 // Method to set the name of the confirmed University for a Mentee
-mentee.menteeSchema.statics.setConfirmedUniversity = function(menteeId, confirmedUniName){
+mentee.menteeSchema.statics.setConfirmedUniversity = function (menteeId, confirmedUniName) {
     menteeId = menteeId.toString();
     return Mentee.updateOne({_id: menteeId}, {
         confirmed_university: confirmedUniName
@@ -249,7 +261,7 @@ mentee.menteeSchema.statics.setConfirmedUniversity = function(menteeId, confirme
 };
 
 // Method to set the residency state for a user
-UserSchema.statics.setResidencyState = function(userId, residencyState){
+UserSchema.statics.setResidencyState = function (userId, residencyState) {
     userId = userId.toString();
     return User.updateOne({_id: userId}, {
         location: residencyState
@@ -262,7 +274,7 @@ UserSchema.statics.setResidencyState = function(userId, residencyState){
 
 
 // Another method to remove a token
-UserSchema.methods.removeToken = function(token){
+UserSchema.methods.removeToken = function (token) {
     var user = this;
 
     // Update using the MongoDB $pull (remove) operator
@@ -276,28 +288,26 @@ UserSchema.methods.removeToken = function(token){
 };
 
 // Run code before firing events (Middleware)!!!
-UserSchema.pre('save',function (next) {
+UserSchema.pre('save', function (next) {
     var user = this;
 
     // Call this function when the password field is modified
-    if(user.isModified('password'))
-    {
+    if (user.isModified('password')) {
         // Overwrite plain password with hashed password
-        bcrypt.genSalt(10,function (error, salt) {
+        bcrypt.genSalt(10, function (error, salt) {
             bcrypt.hash(user.password, salt, function (error, hash) {
                 user.password = hash;
                 next(); // Move on and save()
             });
         });
-    }else
-    {
+    } else {
         next();
     }
 });
 
 
 // Instance method to get the list of skills for the user
-UserSchema.methods.getSkills = function(){
+UserSchema.methods.getSkills = function () {
     var user = this;
     // Return the list of skills for this user
     return user.skillList;
@@ -305,15 +315,15 @@ UserSchema.methods.getSkills = function(){
 
 
 // Instance method to add a Skill for a user
-UserSchema.methods.addSkill = function(skillName, yearsOfExperience){
+UserSchema.methods.addSkill = function (skillName, yearsOfExperience) {
     var user = this;
     //First, check if the user already has this skill
     var duplicated = false;
     user.skillList.forEach(function (element) {
-        if(element.skillName === skillName)
+        if (element.skillName === skillName)
             duplicated = true;
     });
-    if(duplicated===true)
+    if (duplicated === true)
         return Promise.reject("This skill already exists for this user");
     // Saving the new skill for the user
     user.skillList = user.skillList.concat({skillName, yearsOfExperience});
@@ -326,23 +336,23 @@ UserSchema.methods.addSkill = function(skillName, yearsOfExperience){
 };
 
 // Instance method to delete a skill from a User
-UserSchema.method('removeSkill', function(skillName){
+UserSchema.method('removeSkill', function (skillName) {
     var user = this;
     // Check if this skill exists for this user
     var found = false;
-    var counter = 0, index=0;
+    var counter = 0, index = 0;
     user.skillList.forEach(function (element) {
-        if(element.skillName === skillName){
+        if (element.skillName === skillName) {
             found = true;
             index = counter;
         }
         counter++;
     });
-    if(found===false)
+    if (found === false)
         return Promise.reject("Cannot delete a skill that is not registered for this user");
     // Delete the skill
     user.skillList = user.skillList.filter(function (value, index, arr) {
-        return value.skillName!==skillName;
+        return value.skillName !== skillName;
     });
     // Finally save the user
     return user.save().then(function () {
@@ -388,11 +398,11 @@ UserSchema.methods.removeSchoolExperience = function (experienceId) {
     // Delete the experience
     var found = false;
     user.experienceSchoolList = user.experienceSchoolList.filter(function (value, index, arr) {
-        if(value._id==experienceId)
-            found=true;
-        return value._id!=experienceId;
+        if (value._id == experienceId)
+            found = true;
+        return value._id != experienceId;
     });
-    if(found===false)
+    if (found === false)
         return Promise.reject("Trying to remove a non-existent school experience");
     // Save with promise
     return user.save().then(function () {
@@ -421,11 +431,11 @@ UserSchema.methods.removeWorkExperience = function (experienceId) {
     // Delete the experience
     var found = false;
     user.experienceWorkList = user.experienceWorkList.filter(function (value, index, arr) {
-        if(value._id==experienceId)
-            found=true;
-        return value._id!=experienceId;
+        if (value._id == experienceId)
+            found = true;
+        return value._id != experienceId;
     });
-    if(found===false)
+    if (found === false)
         return Promise.reject("Trying to remove a non-existent work experience");
     // Save with promise
     return user.save().then(function () {
@@ -435,14 +445,57 @@ UserSchema.methods.removeWorkExperience = function (experienceId) {
     });
 };
 
+UserSchema.methods.validPassword = function (password) {
+    return bcrypt.compareSync(password, this.password);
+};
+
+// AccessToken
+let AccessTokenSchema = new mongoose.Schema({
+    userId: {
+        type: String,
+        unique: true,
+        required: true
+    },
+    token: {
+        type: String,
+        unique: true,
+        required: true
+    }
+});
+
+let AccessToken = mongoose.model('AccessToken', AccessTokenSchema);
+
+// Client
+let ClientModel = new mongoose.Schema({
+    name: {
+        type: String,
+        unique: true,
+        required: true
+    },
+    clientId: {
+        type: String,
+        unique: true,
+        required: true
+    },
+    clientSecret: {
+        type: String,
+        required: true
+    }
+});
+
+let Client = mongoose.model('Client', ClientModel);
+
 // Defining the user model
-var User = mongoose.model('User',UserSchema);
-var Mentor = User.discriminator('Mentor',mentor.mentorSchema);
-var Mentee = User.discriminator('Mentee',mentee.menteeSchema);
+UserSchema.plugin(findOrCreate);
+let User = mongoose.model('User', UserSchema);
+let Mentor = User.discriminator('Mentor', mentor.mentorSchema);
+let Mentee = User.discriminator('Mentee', mentee.menteeSchema);
 
 // Exporting
 module.exports = {
     User,
+    AccessToken,
+    Client,
     UserSchema,
     Mentor,
     Mentee
