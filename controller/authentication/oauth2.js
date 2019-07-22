@@ -43,16 +43,25 @@ server.exchange(
 
 function generateToken(req, res, done) {
     let tokenValue = crypto.randomBytes(64).toString('hex');
-
-    AccessToken.findOneAndUpdate(
-        {userId: req.user.id},
-        {userId: req.user.id, token: tokenValue},
-        null,
-        function (err) {
+    let userId = req.user._doc._id.toString();
+    AccessToken.findOne(
+        { "userId": userId},
+        function (err, token) {
             if (err)
-                return done(err);
-            res.locals.token = tokenValue;
-            done();
+                done(err);
+
+            if(!token)
+                token = new AccessToken({"userId": userId, "token":tokenValue});
+            else
+                token.token = tokenValue;
+
+            token.save(function(error, token) {
+                if (err)
+                    done(err);
+
+                res.locals.token = tokenValue;
+                done();
+            });
         });
 }
 

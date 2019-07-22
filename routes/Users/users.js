@@ -50,7 +50,12 @@ router.post("/signup/mentee",
 router.get("/minimalprofile",
     config.minimalProfile,
     function (req, res, next) {
-        return res.json({user_id: req.user.id, name: req.user.email, scope: req.authInfo.scope})
+        return res.json({
+            user_id: req.user.id,
+            name: req.user.email,
+            profile_picture: req.user._doc.profile_picture,
+            scope: req.authInfo.scope
+        })
     });
 
 router.get("/profile", function (req, res, next) {

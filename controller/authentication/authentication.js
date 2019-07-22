@@ -2,14 +2,16 @@
 
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
-const BasicStrategy = require('passport-http').BasicStrategy;
 const BearerStrategy = require('passport-http-bearer').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('../../models/user').User;
 const AccessToken = require('../../models/user').AccessToken;
 const server = require('./oauth2');
-const googleIdConfig = require('./client_id');
+const googleIdConfig = require('./client_id_google');
 
+/**
+ * Strategy for validating the
+ */
 passport.use(
     new LocalStrategy(
         function (username, password, done) {
@@ -17,6 +19,7 @@ passport.use(
                 if (err)
                     return done(err);
 
+                //We need to check that neither one of the socialIds is present.
                 if (!user || !user.validPassword(password) || user.googleId)
                     return done(null, false);
 
@@ -62,11 +65,12 @@ passport.use(new GoogleStrategy({
             .then((s) => {
                 if (s.length === 0) {
                     let newGoogleUser = new User({
-                        "email": "placeholder@placeholder.pl",
+                        "email": profile.emails[0].value,
                         "password": "placeholder",
                         "googleId": profile.id,
                         "name": profile.name.givenName,
-                        "surname": profile.name.familyName
+                        "surname": profile.name.familyName,
+                        "profile_picture": profile.photos[0].value
                     });
 
                     return newGoogleUser.save()
