@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "app-module-path": "^2.2.0",
+    "bad-words": "^3.0.2",
     "bcryptjs": "^2.4.3",
     "bluebird": "latest",
     "cookie-parser": "~1.4.4",
@@ -29,6 +30,7 @@
     "passport-local": "^1.0.0",
     "passport-oauth2-client-password": "^0.1.2",
     "pug": "^2.0.4",
+    "socket.io": "^2.2.0",
     "validator": "latest"
   },
   "devDependencies": {

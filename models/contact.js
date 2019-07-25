@@ -106,7 +106,6 @@ contactSchema.statics.retrieveAllContactsForUser = function(userId){
 
 };
 
-
 contactSchema.methods.retrieveMessageList = function(){
     var contact = this;
     // Return the list of skills for this user
@@ -165,8 +164,6 @@ contactSchema.pre('save', function(next){
 
 // Defining the model for the contact
 var Contact = mongoose.model('Contact', contactSchema);
-
-
 
 
 // Exporting

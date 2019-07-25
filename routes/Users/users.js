@@ -6,7 +6,7 @@ const config = require('./configHandlers');
 const lodash = require('lodash');
 
 
-const {Mentor, Mentee} = require('../../models/user.js');
+const {User, Mentor, Mentee} = require('../../models/user.js');
 const {mongoose} = require('../../db/mongoose.js');
 mongoose.Promise = require('bluebird');
 
@@ -48,8 +48,8 @@ router.post("/signup/mentee",
 //  Profile Information
 //---------------------
 router.get("/minimalprofile",
-    config.minimalProfile,
-    function (req, res, next) {
+    config.generalAuth,
+    function (req, res) {
         return res.json({
             user_id: req.user.id,
             name: req.user.email,
@@ -58,10 +58,27 @@ router.get("/minimalprofile",
         })
     });
 
-router.get("/profile", function (req, res, next) {
+router.get("/profile",
+    config.generalAuth,
+    function (req, res) {
+    User.getProfile(req.user.id)
+        .then((profileResponse)=> res.status(201).json(profileResponse))
+        .catch((error)=> res.status(400).json(error))
 });
 
-router.get("/explore", function (req, res, next) {
+router.get("/profile/:id",
+    function (req,res) {
+    User.getProfile(req.params.id)
+        .then((profileResponse)=> res.status(201).json(profileResponse))
+        .catch((error)=> res.status(400).json(error))
+});
+
+router.get("/explore",
+    config.generalAuth,
+    function (req, res) {
+    User.exploreSection(req.user.id)
+        .then((exploreResponse) => res.status(201).json(exploreResponse))
+        .catch((error) => res.status(400).json(error))
 });
 
 module.exports = router;
