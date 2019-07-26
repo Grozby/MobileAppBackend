@@ -13,6 +13,24 @@ mongoose.Promise = require('bluebird');
 //-------------------
 //  Registration
 //-------------------
+
+router.post("/signup_complete/mentor",
+    config.checkSignupMentor,
+    function (req, res) {
+        req.body = lodash.pick(req.body, ['email', 'password', 'name', 'surname', 'referralCompany','workingRole','state','experienceList','educationList',
+            'questionList','tagList','contactOpt'
+        ]);
+        let mentor = new Mentor(req.body);
+
+        mentor.save()
+            .then(() => { //if user not present in the Database, we add it
+                return res.sendStatus(201);
+            })
+            .catch(error => { //Otherwise, we proceed in sending what went wrong.
+                return res.status(400).json(error);
+            });
+    });
+
 router.post("/signup/mentor",
     config.checkSignupMentor,
     function (req, res) {
@@ -53,7 +71,7 @@ router.get("/minimalprofile",
         return res.json({
             user_id: req.user.id,
             name: req.user.email,
-            profile_picture: req.user._doc.profile_picture,
+            profilePicture: req.user._doc.profilePicture,
             scope: req.authInfo.scope
         })
     });
@@ -72,6 +90,8 @@ router.get("/profile/:id",
         .then((profileResponse)=> res.status(201).json(profileResponse))
         .catch((error)=> res.status(400).json(error))
 });
+
+
 
 router.get("/explore",
     config.generalAuth,

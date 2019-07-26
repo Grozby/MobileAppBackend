@@ -70,7 +70,7 @@ passport.use(new GoogleStrategy({
                         "googleId": profile.id,
                         "name": profile.name.givenName,
                         "surname": profile.name.familyName,
-                        "profile_picture": profile.photos[0].value
+                        "profilePicture": profile.photos[0].value
                     });
 
                     return newGoogleUser.save()

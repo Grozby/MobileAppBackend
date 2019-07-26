@@ -20,7 +20,6 @@ exports.checkSignupMentee = [
     validation.bodyValidated
 ];
 
-
-exports.minimalProfile = [
+exports.generalAuth = [
     auth.passport.authenticate('bearer')
 ];

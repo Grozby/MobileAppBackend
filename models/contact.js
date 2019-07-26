@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-// Definition of the schema
-
 var messageSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -169,5 +167,7 @@ var Contact = mongoose.model('Contact', contactSchema);
 // Exporting
 module.exports = {
     Contact,
-    Message
+    Message,
+    ContactOption
+
 };

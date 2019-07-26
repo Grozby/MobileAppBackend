@@ -15,6 +15,7 @@ app.use(passport.initialize());
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users/users');
 const authRouter = require('./routes/auth/auth');
+const contactRouter = require('./routes/contact/contact');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -25,6 +26,7 @@ app.use(cookieParser());
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
+app.use('/contact', contactRouter);
 
 
 // catch 404 and forward to error handler

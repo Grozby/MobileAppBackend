@@ -1,3 +1,5 @@
+
+workingRole,state,experienceList,educationList,questionList,tagList,contactOption
 {
 	"email": "asdasdada@google.com",
 	"password": "pasadawd",
@@ -30,6 +32,9 @@
 	"tagList":
 	[
 	{"tag":"Software Engineer"},{"tag":"Front-End"}
-		]
-
+		],
+	"contactOption": {
+	    "kind":"Quiz",
+	    "question": "come ti chiami?"
+	}
 }
