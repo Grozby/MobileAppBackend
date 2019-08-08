@@ -4,6 +4,7 @@ let express = require('express');
 let router = express.Router();
 const config = require('./configHandlers');
 const lodash = require('lodash');
+const errorParse = require('../../controller/error_parser');
 
 
 const {User, Mentor, Mentee} = require('../../models/user.js');
@@ -27,7 +28,7 @@ router.post("/signup_complete/mentor",
                 return res.sendStatus(201);
             })
             .catch(error => { //Otherwise, we proceed in sending what went wrong.
-                return res.status(400).json(error);
+                return res.status(400).json(errorParse.parseRegistrationError(error));
             });
     });
 
@@ -42,7 +43,7 @@ router.post("/signup/mentor",
                   return res.sendStatus(201);
               })
               .catch(error => { //Otherwise, we proceed in sending what went wrong.
-                  return res.status(400).json(error);
+                  return res.status(400).json(errorParse.parseRegistrationError(error));
               });
     });
 
@@ -57,7 +58,7 @@ router.post("/signup/mentee",
                   return res.sendStatus(201);
               })
               .catch(error => { //Otherwise, we proceed in sending what went wrong.
-                  return res.status(400).json(error);
+                  return res.status(400).json(errorParse.parseRegistrationError(error));
               });
     }
 );
