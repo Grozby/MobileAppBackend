@@ -23,8 +23,8 @@ io.on('connection', (socket) => {
     console.log('New WebSocket connection')
 
     /*
-    socket.on('join', (username, callback) => {
-        const { error, user } = addUser({ id: socket.id, username })
+    socket.on('join', (messageSender, callback) => {
+        const { error, user } = addUser({ id: socket.id, messageSender })
         if (error) {
             return callback(error)
         }
@@ -32,7 +32,7 @@ io.on('connection', (socket) => {
         //socket.join(user.room)
 
         socket.emit('message', generateMessage('Admin', 'Welcome!'))
-        socket.broadcast.to(user.room).emit('message', generateMessage('Admin', `${user.username} has joined!`))
+        socket.broadcast.to(user.room).emit('message', generateMessage('Admin', `${user.messageSender} has joined!`))
 
         io.to(user.room).emit('roomData', {
             room: user.room,
@@ -46,7 +46,7 @@ io.on('connection', (socket) => {
 
     socket.on('chatWith', ({username,receiver}, callback) => {
 
-        const { error, user } = addUser({ id: socket.id, username })
+        const { error, user } = addUser({ id: socket.id, username: senderId })
         if (error) {
             return callback(error)
         }
@@ -57,7 +57,7 @@ io.on('connection', (socket) => {
 
                 //create new chatroom - Not possible since a contact request is created only by a request.
             }
-            message_list = chat_room.retrieveMessageList();
+            messageList = chat_room.retrieveMessageList();
             socket.join(chat_room.retrieveId());
             message_list.forEach(function(message){
                 socket.emit('message', message);
@@ -75,7 +75,7 @@ io.on('connection', (socket) => {
                 }
 
                 */
-                Contact.addMessageStatic(chat_room.retrieveId(),user.username,message).then((result_message)=>
+                Contact.addMessageStatic(chat_room.retrieveId(),user.messageSender,message).then((result_message)=>
                     io.to(chat_room.retrieveId()).emit('message',result_message)
                 ).catch((err)=> console.log(err))
                 callback()
@@ -85,13 +85,13 @@ io.on('connection', (socket) => {
             .catch(function(error){console.log(error)});
 
         /*
-        const { error } = addUser({ id: socket.id, username });
+        const { error } = addUser({ id: socket.id, messageSender });
         if (error) {
             return callback(error)
         }
         */
 
-        //socket.broadcast.to(user.room).emit('message', generateMessage('Admin', `${user.username} has joined!`))
+        //socket.broadcast.to(user.room).emit('message', generateMessage('Admin', `${user.messageSender} has joined!`))
         /*
         io.to(user.room).emit('roomData', {
             room: user.room,
@@ -107,7 +107,7 @@ io.on('connection', (socket) => {
         //const user = removeUser(socket.id)
         /*
         if (user) {
-            io.to(user.room).emit('message', generateMessage('Admin', `${user.username} has left!`))
+            io.to(user.room).emit('message', generateMessage('Admin', `${user.messageSender} has left!`))
             io.to(user.room).emit('roomData', {
                 room: user.room,
                 users: getUsersInRoom(user.room)

@@ -127,6 +127,43 @@ var UserSchema = new mongoose.Schema({
 
 //TODO: contact options.
 // https://stackoverflow.com/questions/675231/how-do-i-access-properties-of-a-javascript-object-if-i-dont-know-the-names
+
+UserSchema.statics.getToken = function (id){
+    return new Promise((resolve,reject)=>{
+        User.findOne({_id:id}, function(err,user){
+            if (user.kind === 'Mentor'){
+                resolve()
+            }
+            if (user.kind === 'Mentee'){
+                if (user.tokens_wallet < 1){
+                    reject({"error":"NOT_ENOUGH_TOKENS"})
+                } else {
+                    resolve()
+                }
+            }
+        });
+    })
+};
+
+UserSchema.statics.decreaseToken = function (id){
+    return new Promise((resolve,reject)=>{
+        User.findOne({_id:id}, function(err,user){
+            if (user.kind === 'Mentor'){
+                resolve()
+            }
+            if (user.kind === 'Mentee'){
+                user.tokens_wallet = user.tokens_wallet -1;
+                user.save();
+                resolve()
+            }
+            if(err){
+                reject(err)
+            }
+        });
+    })
+};
+
+
 UserSchema.statics.getQuiz = function (id) {
     return User.findOne({_id:id},{'contactOpt.question':1,'contactOpt.timeInMinutes':1});
 };
@@ -186,10 +223,6 @@ UserSchema.statics.findByCredentials =  (email, password) => {
         })
     })
 }
-
-
-
-
 
 
 // Schema method to find a single user, given its id

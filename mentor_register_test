@@ -1,7 +1,7 @@
 
 workingRole,state,experienceList,educationList,questionList,tagList,contactOption
 {
-	"email": "asdasdada@google.com",
+	"email": "asdasddddadau@google.com",
 	"password": "pasadawd",
 	"name":"Giovannone",
 	"surname": "Giovannino",
@@ -33,7 +33,7 @@ workingRole,state,experienceList,educationList,questionList,tagList,contactOptio
 	[
 	{"tag":"Software Engineer"},{"tag":"Front-End"}
 		],
-	"contactOption": {
+	"contactOpt": {
 	    "kind":"Quiz",
 	    "question": "come ti chiami?"
 	}

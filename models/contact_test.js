@@ -1,20 +1,20 @@
 const {Contact,Message} = require('./contact.js');
 
 var message = new Message({
-    username: 'Flavio',
-    text: 'Hello',
-    created_at: new Date()
+    messageSender: 'Flavio',
+    content: 'Hello',
+    createdAt: new Date()
 });
 
 //console.log(JSON.stringify(message));
 
 var contact = new Contact({
     status: 'accepted',
-    sending_mentee: 'Flavio',
-    receiving_mentor: 'Artu',
+    sender: 'Flavio',
+    receiver: 'Artu',
     is_revealed: false,
-    created_at: new Date(),
-    message_list: [message]
+    createdAt: new Date(),
+    messageList: [message]
 })
 
 //contact.save()

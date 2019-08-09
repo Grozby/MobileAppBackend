@@ -1,22 +1,27 @@
 const mongoose = require('mongoose');
 
 var messageSchema = new mongoose.Schema({
-    username: {
+    messageSender: {
         type: String,
         required: true
     },
-    text: {
+    content: {
         type: String,
         required: true
     },
-    created_at: {
+    kind:{
+        type: String,
+        required: true,
+        enum: ['text','audio']
+    },
+    createdAt: {
         type: Date,
+        default: Date.now(),
         required: true
     }
 });
 
 var Message = mongoose.model('Message', messageSchema);
-
 
 var contactSchema = new mongoose.Schema({
     status: {
@@ -24,34 +29,29 @@ var contactSchema = new mongoose.Schema({
         enum: ["accepted","refused","pending"],
         default: "pending"
     },
-    sending_mentee: {
+    sender: {
         type: String,
         required: true
     },
-    receiving_mentor: {
+    receiver: {
         type: String,
         required: true
     },
-    is_revealed: {
-        type: Boolean,
-        default: false
+    createdAt: {
+        type: Date,
+        default: Date.now(),
+        required: true
     },
-    pending_tokens: {
-        type: Number,
-        required: true,
-        default: 1
-    },
-    created_at: {
+    updatedAt: {
         type: Date
     },
-    updated_at: {
-        type: Date
-    },
-    message_list: {
-        type: [messageSchema]
+    messageList: {
+        type: [messageSchema],
+        required:true
     }
 });
 
+contactSchema.index({ sender: 1, receiver: 1 }, { unique: true });
 
 // Methods
 // This method returns the contact for a given couple of sender + receiver
@@ -59,7 +59,7 @@ contactSchema.statics.findBySenderAndReceiver = function (sender, receiver) {
     sender = sender.toString();
     receiver = receiver.toString();
     return Contact.findOne({$or:[
-        {sending_mentee: sender, receiving_mentor:receiver}, {sending_mentee: receiver, receiving_mentor: sender}]}
+        {sender: sender, receiver:receiver}, {sender: receiver, receiver: sender}]}
     )
 };
 
@@ -82,7 +82,7 @@ contactSchema.statics.updateStatus = function (contactId, newStatus) {
     now = new Date();
     return Contact.updateOne({_id: contactId}, {
         status: newStatus,
-        updated_at: now
+        updatedAt: now
     }).then(function (result) {
         return Promise.resolve(result);
     }).catch(function (err) {
@@ -95,7 +95,7 @@ contactSchema.statics.retrieveAllContactsForUser = function(userId){
     userId = userId.toString();
 
     return Contact.find({$or:[
-            {sending_mentee: userId}, {receiving_mentor: userId}]}
+            {sender: userId}, {receiver: userId}]}
     ).then(function (listOfContacts) {
         return Promise.resolve(listOfContacts);
     }).catch(function (err) {
@@ -107,7 +107,7 @@ contactSchema.statics.retrieveAllContactsForUser = function(userId){
 contactSchema.methods.retrieveMessageList = function(){
     var contact = this;
     // Return the list of skills for this user
-    return contact.message_list;
+    return contact.messageList;
 };
 
 contactSchema.methods.retrieveId = function(){
@@ -116,16 +116,14 @@ contactSchema.methods.retrieveId = function(){
     return contact._id;
 };
 
-
 contactSchema.statics.addMessageStatic = function (contactId, sender, text) {
-
     var message = new Message({
-        username: sender,
-        text: text,
-        created_at: new Date()
+        messageSender: sender,
+        content: text,
+        createdAt: new Date()
     });
 
-    return Contact.findOneAndUpdate({_id: contactId}, { $push: { message_list: message } }).then(function (result) {
+    return Contact.findOneAndUpdate({_id: contactId}, { $push: { messageList: message } }).then(function (result) {
         return Promise.resolve(message);
     }).catch(function (err) {
         return Promise.reject(err);
@@ -135,13 +133,13 @@ contactSchema.statics.addMessageStatic = function (contactId, sender, text) {
 contactSchema.methods.addMessage = function (sender, text) {
 
     var message = new Message({
-        username: sender,
-        text: text,
-        created_at: new Date()
+        messageSender: sender,
+        content: text,
+        createdAt: new Date()
     });
-    if(!this.message_list || this.message_list===0)
+    if(!this.messageList || this.messageList===0)
         this.message_list = [];
-    this.message_list = this.message_list.concat(message);
+    this.message_list = this.messageList.concat(message);
     console.log(this._id);
     return this.update().then(function(){
         return Promise.resolve(message)
@@ -153,21 +151,17 @@ contactSchema.methods.addMessage = function (sender, text) {
 // Pre method to set creation timestamp
 contactSchema.pre('save', function(next){
     now = new Date();
-    if ( !this.created_at ) {
-        this.created_at = now;
+    if ( !this.createdAt ) {
+        this.createdAt = now;
     }
     next();
 });
 
-
 // Defining the model for the contact
 var Contact = mongoose.model('Contact', contactSchema);
-
 
 // Exporting
 module.exports = {
     Contact,
-    Message,
-    ContactOption
-
+    Message
 };

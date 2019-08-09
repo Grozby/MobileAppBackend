@@ -8,7 +8,7 @@ const config = require('./configHandlers');
  * --- Login ---
  *
  * Example form url encoded
- * username: <email>
+ * messageSender: <email>
  * password: <password>
  * grant_type: password
  */

@@ -8,7 +8,7 @@ const AccessToken = require('../../models/user').AccessToken;
 // create OAuth 2.0 server
 const server = oauth2orize.createServer();
 
-// Exchange username & password for an access token.
+// Exchange messageSender & password for an access token.
 server.exchange(
     oauth2orize.exchange.password(function (client, username, password, scope, done) {
         User.findOne({email: username}, function (err, user) {

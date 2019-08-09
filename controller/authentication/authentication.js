@@ -104,8 +104,8 @@ exports.passport = passport;
 
 //
 // passport.use(new BasicStrategy(
-//     function (username, password, done) {
-//         ClientModel.findOne({clientId: username}, function (err, client) {
+//     function (messageSender, password, done) {
+//         ClientModel.findOne({clientId: messageSender}, function (err, client) {
 //             if (err) {
 //                 return done(err);
 //             }

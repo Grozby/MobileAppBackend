@@ -218,7 +218,7 @@ app.get('/search',function (request, response) {
 // This route is used by a Mentee to send a contact request to a Mentor
 app.post('/contact/request', authenticate, function (request, response) {
 
-    // Retrieving the Mentor ID and text message from the request
+    // Retrieving the Mentor ID and content message from the request
     if(!request.body.receiver || !request.body.message){
         response.status(400).send("No receiver (Mentor) ID specified OR message");
         return;
@@ -261,8 +261,8 @@ app.post('/contact/request', authenticate, function (request, response) {
         // Now we can finally save the contact
         var newContactBody = {
             status: "pending",
-            sending_mentee: userMentee._id,
-            receiving_mentor: userMentor._id,
+            sender: userMentee._id,
+            receiver: userMentor._id,
             pending_tokens: userMentor.cost_in_tokens
         };
         contact = new Contact(newContactBody);
@@ -312,7 +312,7 @@ app.get('/contact/refuse', authenticate, function (request, response) {
     Contact.findById(contactId).then(function (contact) {
         contactObject = contact;
         // Check that we are its destination
-        if(contact.receiving_mentor.toString() !== userMentor._id.toString()){
+        if(contact.receiver.toString() !== userMentor._id.toString()){
             return Promise.reject("Requester is not the same Mentor as indicated in the contact");
         }
         // Check that the contact is still in Pending status (otherwise it cannot be refused)
@@ -324,7 +324,7 @@ app.get('/contact/refuse', authenticate, function (request, response) {
 
     }).then(function () {
         // Search for the sending Mentee
-        return User.findById(contactObject.sending_mentee);
+        return User.findById(contactObject.sender);
     }).then(function (foundMentee) {
         // Set the new number of tokes to the Mentee
         var tokensToSet = foundMentee.tokens_wallet + contactObject.pending_tokens;
@@ -362,7 +362,7 @@ app.get('/contact/accept', authenticate, function (request, response){
     Contact.findById(contactId).then(function (contact){
         contactObject = contact;
         // Check that we are its destination
-        if(contact.receiving_mentor.toString() !== userMentor._id.toString()){
+        if(contact.receiver.toString() !== userMentor._id.toString()){
             return Promise.reject("Requester is not the same Mentor as indicated in the contact");
         }
         // Check that the contact is still in Pending status (otherwise it cannot be accepted)
@@ -395,13 +395,13 @@ app.get('/contact/list', authenticate, function (request, response) {
         if(user.kind==="Mentee"){
             amIMentor = false;
             listOfContacts.forEach(function (singleContactObject) {
-                allQueriesResults.push(User.find({_id: singleContactObject.receiving_mentor}).limit(1));
+                allQueriesResults.push(User.find({_id: singleContactObject.receiver}).limit(1));
             });
         }
         else{
             amIMentor = true;
             listOfContacts.forEach(function (singleContactObject) {
-                allQueriesResults.push(User.find({_id: singleContactObject.sending_mentee}).limit(1));
+                allQueriesResults.push(User.find({_id: singleContactObject.sender}).limit(1));
             });
         }
         return Promise.all(allQueriesResults);
@@ -414,15 +414,15 @@ app.get('/contact/list', authenticate, function (request, response) {
                  myId: user._id,
                  otherUserId: listOfUsers[counter][0]._id,
                  contactId: contact._id.toString(),
-                 lastMessage: contact.message_list[contact.message_list.length-1].text,
+                 lastMessage: contact.messageList[contact.messageList.length-1].content,
                  amIMentor: amIMentor,
                  contactStatus: contact.status
              };
              // As timestamp use update time if available, otherwise creation time
-             if(!contact.updated_at || contact.updated_at === "")
-                 entry.timestamp = contact.created_at;
+             if(!contact.updatedAt || contact.updatedAt === "")
+                 entry.timestamp = contact.createdAt;
              else
-                 entry.timestamp = contact.updated_at;
+                 entry.timestamp = contact.updatedAt;
              // Now finally compose the name to be shown in the message
              var shownName;
              if(contact.is_revealed==true)
