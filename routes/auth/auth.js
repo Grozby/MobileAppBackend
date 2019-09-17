@@ -3,6 +3,7 @@
 let express = require('express');
 let router = express.Router();
 const config = require('./configHandlers');
+const authentication = require('../../controller/authentication/authentication');
 
 /**
  * --- Login ---
@@ -30,6 +31,19 @@ router.get('/google/callback',
             "access_token": res.locals.token,
             "token_type": "Bearer"
         });
+    });
+
+router.get(
+    '/google/signintoken',
+    [],
+    async function (req, res)  {
+        let token = req.query.token;
+        try {
+            await authentication.loginWithGoogle(token);
+            return res.sendStatus(200);
+        } catch (e) {
+            res.sendStatus(401);
+        }
     });
 
 module.exports = router;

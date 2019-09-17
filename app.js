@@ -7,6 +7,9 @@ const logger = require('morgan');
 const passport = require('passport');
 const oauth2 = require('./controller/authentication/oauth2');
 const app = express();
+const fs = require('fs');
+const https = require('https');
+const http = require('http');
 
 //Passport js
 app.use(passport.initialize());
@@ -43,8 +46,16 @@ app.use(function (err, req, res, next) {
     return res.sendStatus(err.status || 500);
 });
 
-app.listen(5000, function () {
+http.createServer(app).listen(5000, function () {
     console.log("Listening on port " + 5000 + " ...");
 });
+
+https.createServer({
+    key: fs.readFileSync('./config/server.key'),
+    cert: fs.readFileSync('./config/server.crt')
+}, app).listen(5001, function () {
+    console.log("Listening on port " + 5001 + " ...");
+});
+
 
 module.exports = app;
