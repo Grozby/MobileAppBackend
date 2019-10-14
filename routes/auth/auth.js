@@ -19,13 +19,9 @@ router.post("/login",
         return res.sendStatus(200);
     });
 
-
-router.get('/google',
-    config.authGoogle
-);
-
-router.get('/google/callback',
-    config.authGoogleCallback,
+router.get(
+    '/google/signintoken',
+    config.checkGoogleLogin,
     function (req, res) {
         res.status(200).json({
             "access_token": res.locals.token,
@@ -34,16 +30,10 @@ router.get('/google/callback',
     });
 
 router.get(
-    '/google/signintoken',
-    [],
-    async function (req, res)  {
-        let token = req.query.token;
-        try {
-            await authentication.loginWithGoogle(token);
-            return res.sendStatus(200);
-        } catch (e) {
-            res.sendStatus(401);
-        }
-    });
+    '/checkauth',
+    config.checkAuth,
+    function (req, res) {
+    res.sendStatus(200);
+});
 
 module.exports = router;

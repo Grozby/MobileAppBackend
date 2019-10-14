@@ -8,11 +8,11 @@ exports.checkLogin = [
     auth.oauth2Server.errorHandler
 ];
 
-exports.authGoogle = [
-    auth.passport.authenticate('google', {session: false}),
+exports.checkGoogleLogin = [
+    auth.loginWithGoogle,
+    auth.oauth2Server.generateToken
 ];
 
-exports.authGoogleCallback = [
-    auth.passport.authenticate('google', {session: false}),
-    auth.oauth2Server.generateToken
+exports.checkAuth = [
+    auth.passport.authenticate('bearer')
 ];

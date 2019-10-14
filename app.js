@@ -43,7 +43,7 @@ app.use(function (err, req, res, next) {
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
 
-    return res.sendStatus(err.status || 500);
+    return res.sendStatus(err.status || 404);
 });
 
 http.createServer(app).listen(5000, function () {
