@@ -42,25 +42,26 @@ server.exchange(
     }));
 
 function generateToken(req, res, done) {
-    let tokenValue = crypto.randomBytes(64).toString('hex');
-    let userId = req.user._doc._id.toString();
+    let tokenValue = crypto.randomBytes(256).toString('hex');
+    let userId = res.locals.user._doc._id.toString();
     AccessToken.findOne(
         { "userId": userId},
         function (err, token) {
             if (err)
                 done(err);
-
-            if(!token)
+            else if(!token)
                 token = new AccessToken({"userId": userId, "token":tokenValue});
             else
                 token.token = tokenValue;
 
-            token.save(function(error, token) {
-                if (err)
-                    done(err);
 
-                res.locals.token = tokenValue;
-                done();
+            token.save(function(error, token) {
+                if (error)
+                    done(error);
+                else {
+                    res.locals.token = tokenValue;
+                    done();
+                }
             });
         });
 }
