@@ -4,7 +4,6 @@ const work = require('./work');
 
 var options = {discriminatorKey: 'kind'};
 
-
 const experienceSchema = new mongoose.Schema ({
     fromDate: {
         type: Date,

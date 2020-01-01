@@ -6,7 +6,6 @@ const config = require('./configHandlers');
 const lodash = require('lodash');
 const errorParse = require('../../controller/error_parser');
 
-
 const {User, Mentor, Mentee} = require('../../models/user.js');
 const {mongoose} = require('../../db/mongoose.js');
 mongoose.Promise = require('bluebird');
@@ -91,8 +90,6 @@ router.get("/profile/:id",
         .then((profileResponse)=> res.status(201).json(profileResponse))
         .catch((error)=> res.status(400).json(error))
 });
-
-
 
 router.get("/explore",
     config.generalAuth,

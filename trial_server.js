@@ -8,10 +8,8 @@ const {Contact} = require('./models/contact');
 const cors = require('cors');
 mongoose.Promise = require('bluebird');
 
-
 // Instantiating express
 var app = express();
-
 
 // Setting up the port to listen to (use env variable PORT)
 portNum = process.env.PORT || 3000;

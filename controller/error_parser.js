@@ -6,7 +6,6 @@ exports.parseRegistrationError = function (error){
             "error": "EMAIL_ALREADY_USED"
         }
     }
-
     return error;
 };
 

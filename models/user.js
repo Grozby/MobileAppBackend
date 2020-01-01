@@ -56,8 +56,7 @@ var UserSchema = new mongoose.Schema({
         default: 'US'
     },
     googleId: {
-        type: String,
-        unique: true
+        type: String
     },
     tokens: [{      // Array composed of elements (access,token)
         access: {
@@ -407,7 +406,6 @@ UserSchema.method('removeSkill', function (skillName) {
         return Promise.reject(err);
     });
 });
-
 
 // Instance method for generating an access Token
 UserSchema.methods.generateAuthToken = function () {

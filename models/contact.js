@@ -9,6 +9,9 @@ var messageSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    audioFile: {
+        type: String
+    },
     kind:{
         type: String,
         required: true,
