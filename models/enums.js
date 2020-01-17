@@ -7,7 +7,7 @@ const tagSchema = new mongoose.Schema ({
             'Machine Learning','Python','C++','iOS','Android','Mobile Dev'],
         required: true
     }
-});
+}, {_id: false});
 
 const questionSchema = new mongoose.Schema ({
     question: {
@@ -20,7 +20,7 @@ const questionSchema = new mongoose.Schema ({
         type:String,
         required: true
     }
-});
+}, {_id: false});
 
 module.exports = {
     tagSchema,

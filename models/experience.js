@@ -1,29 +1,32 @@
 const mongoose = require('mongoose');
 const schoolDegree = require('./education');
 const work = require('./work');
+const institution = require('./institution');
+const options = {discriminatorKey: 'kind', _id : false};
 
-var options = {discriminatorKey: 'kind'};
 
-const experienceSchema = new mongoose.Schema ({
+const experienceSchema = new mongoose.Schema({
+    institution: {
+        type: institution.institutionSchema,
+        required: true
+    },
     fromDate: {
         type: Date,
         required: true
     },
-
     toDate: {
         type: Date,
     },
-
     nowDoing: {         // If this boolean is true, then the user is still doing this experience in the present (so there is no need of toMonth and toYear)
         type: Boolean,
         default: false
     }
-},options);
+}, options);
 
 // Defining the experience models
-var Experience  = mongoose.model('experience',experienceSchema);
-var SchoolDegree = Experience.discriminator('Education',schoolDegree.schoolDegreeSchema);
-var Work = Experience.discriminator('Work',work.workSchema);
+let Experience = mongoose.model('experience', experienceSchema);
+let SchoolDegree = Experience.discriminator('Education', schoolDegree.schoolDegreeSchema);
+let Work = Experience.discriminator('Job', work.workSchema);
 
 // Exporting
 module.exports = {

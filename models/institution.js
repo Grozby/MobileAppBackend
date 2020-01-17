@@ -5,10 +5,10 @@ const institutionSchema = new mongoose.Schema ({
         type: String,
         required: true
     },
-    profilePic: {
+    pictureUrl: {
         type: mongoose.SchemaTypes.Url,
         default: "https://ui-avatars.com/api/?background=0D8ABC&color=fff"
     },
-});
+},  {_id : false});
 
 module.exports.institutionSchema = institutionSchema;

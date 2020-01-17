@@ -58,16 +58,6 @@ var UserSchema = new mongoose.Schema({
     googleId: {
         type: String
     },
-    tokens: [{      // Array composed of elements (access,token)
-        access: {
-            type: String,
-            required: true
-        },
-        token: {
-            type: String,
-            required: true
-        }
-    }],
     bio: {
         type: String,
         min: 1,
@@ -75,7 +65,7 @@ var UserSchema = new mongoose.Schema({
         trim: true,
         default: `Hi I'm excited to be here!`
     },
-    profilePicture: {
+    pictureUrl: {
         type: mongoose.SchemaTypes.Url,
         default: "https://ui-avatars.com/api/?background=0D8ABC&color=fff"
     },
@@ -95,16 +85,10 @@ var UserSchema = new mongoose.Schema({
         type: mongoose.SchemaTypes.Url
     },
 
-    phoneNumber: {
-        type: String,
-        validate: {
-            validator: function (v) {
-                return /\d{3}-\d{3}-\d{4}/.test(v);
-            },
-            message: props => `${props.value} is not a valid phone number!`
-        }
+    currentJob: {
+        type: experience.Work.schema,
+        required: true,
     },
-
     educationList: {
         type: [experience.Education.schema]
     },

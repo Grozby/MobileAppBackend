@@ -1,22 +1,14 @@
 const mongoose = require('mongoose');
-const institution = require('./institution')
 
-const schoolDegreeSchema = new mongoose.Schema ({
-    university: {
-        type: institution.institutionSchema,
-        required: true
-    },
-    degreeType: {
+const schoolDegreeSchema = new mongoose.Schema({
+    degreeLevel: {
         type: String,
         required: true,
     },
-    major: {
-        type:String,
-        required: true
+    fieldOfStudy: {
+        type: String,
+        required: true,
     },
-    GPA: {
-        type: Number
-    }
-});
+}, {_id : false});
 
 module.exports.schoolDegreeSchema = schoolDegreeSchema;

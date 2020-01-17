@@ -1,19 +1,10 @@
 const mongoose = require('mongoose');
-const institution = require('./institution');
 
 const workSchema = new mongoose.Schema ({
-
-    company: {
-        type: institution.institutionSchema,
-        required: true
-    },
-    role: {
+    workingRole: {
         type: String,
         required: true,
-    },
-    description: {
-        type: String
     }
-});
+}, {_id : false});
 
 module.exports.workSchema = workSchema;

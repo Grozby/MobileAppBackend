@@ -70,25 +70,48 @@ router.get("/minimalprofile",
     config.generalAuth,
     function (req, res) {
         return res.json({
-            user_id: req.user.id,
+            kind: req.user.kind,
             name: req.user.email,
-            profilePicture: req.user._doc.profilePicture,
-            scope: req.authInfo.scope
+            profilePicture: req.user.pictureUrl,
         })
     });
 
 router.get("/profile",
     config.generalAuth,
     function (req, res) {
-        User.getProfile(req.user.id)
-            .then((profileResponse) => res.status(201).json(profileResponse))
-            .catch((error) => res.status(400).json(error))
+
+        let socialAccountList = [
+            "twitter", "github", "facebook", "linkedin", "instagram"
+        ];
+
+        return res.json({
+            kind: req.user.kind,
+            name: req.user.name,
+            surname: req.user.surname,
+            pictureUrl: req.user.pictureUrl,
+            location: req.user.location,
+            bio: req.user.bio,
+            currentJob: req.user.currentJob,
+            pastExperiences: [...req.user.educationList, ...req.user.experienceList],
+            questions: req.user.questionList,
+            tokenWallet: req.user.tokens_wallet,
+            socialAccounts: socialAccountList
+                .map((e) => {
+                    if (req.user[e] != null) {
+                        return {
+                            "type": e,
+                            "urlAccount": req.user[e]
+                        }
+                    }
+                })
+                .filter(e => e != null),
+        })
     });
 
 router.get("/profile/:id",
     function (req, res) {
         User.getProfile(req.params.id)
-            .then((profileResponse) => res.status(201).json(profileResponse))
+            .then((profileResponse) => res.status(200).json(profileResponse))
             .catch((error) => res.status(400).json(error))
     });
 
@@ -105,61 +128,272 @@ router.get("/explore",
 router.get("/explorestub",
     [], function (req, res) {
         let mentors = [
-            {
-                name: "Bob",
-                surname: "Ross",
-                bio:
-                    "\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"",
-                location: "Mountain View, US",
-                company: "Google",
-                pictureUrl:
-                    "https://images.csmonitor.com/csm/2015/06/913184_1_0610-larry_standard.jpg?alias=standard_900x600",
-                questions: [
-                    {
-                        question: "Favorite programming languages...",
-                        answer: "Java, Python, C++",
+                {
+                    kind: "Mentor",
+                    name: "Bob",
+                    surname: "Ross",
+                    bio:
+                        "\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"",
+                    location: "Mountain View, US",
+                    company: "Google",
+                    pictureUrl:
+                        "https://images.csmonitor.com/csm/2015/06/913184_1_0610-larry_standard.jpg?alias=standard_900x600",
+                    currentJob: {
+                        kind: "Job",
+                        institution: {
+                            name: "Google",
+                            pictureUrl:
+                                "https://freeiconshop.com/wp-content/uploads/edd/google-flat.png",
+                        },
+                        workingRole: "Software Engineer",
+                        fromDate: "2019-03-01 00:00:00.000Z",
                     },
-                    {
-                        question: "Dragoni volanti",
-                        answer: "E dove trovarli",
-                    }
-                ],
-                "pastExperiences": [
-                    {
-                        type: "OldJob",
-                        company: "Apple",
-                        workingRole: "Software engineer",
-                    },
-                    {
-                        "type": "AcademicDegree",
-                        degreeLevel: "Ph.D",
-                        fieldOfStudy: "Computer Science",
-                        university: "Stanford University",
-                    },
-                    {
-                        "type": "AcademicDegree",
-                        degreeLevel: "Ph.D",
-                        fieldOfStudy: "Computer Science",
-                        university: "Stanford University",
-                    },
-                    {
-                        "type": "AcademicDegree",
-                        degreeLevel: "Ph.D",
-                        fieldOfStudy: "Computer Science",
-                        university: "Stanford University",
-                    }
-                ],
-                jobType: "Software Engineer",
-                workingSpecialization: ["Software Engineer", "Front End", "Backend"],
-                companyImageUrl:
-                    "https://freeiconshop.com/wp-content/uploads/edd/google-flat.png",
+                    questions: [
+                        {
+                            question: "Favorite programming languages...",
+                            answer: "Java, Python, C++",
+                        },
+                        {
+                            question: "Dragoni volanti",
+                            answer: "E dove trovarli",
+                        }
+                    ],
+                    pastExperiences:
+                        [
+                            {
+                                kind: "Job",
+                                institution: {
+                                    name: "Apple",
+                                    pictureUrl:
+                                        "https://i.pinimg.com/originals/1c/aa/03/1caa032c47f63d50902b9d34492e1303.jpg",
+                                },
+                                workingRole: "Software Engineer",
+                                fromDate: "2019-03-01 00:00:00.000Z",
+                                toDate: "2019-09-01 00:00:00.000Z",
+                            },
+                            {
+                                kind: "Education",
+                                institution: {
+                                    name: "Stanford University",
+                                    pictureUrl:
+                                        "https://identity.stanford.edu/img/block-s-2color.png",
+                                },
+                                degreeLevel: "Ph.D",
+                                fieldOfStudy: "Computer Science",
+                                fromDate: "2015-07-01 00:00:00.000Z",
+                                toDate: "2018-07-01 00:00:00.000Z",
+                            },
+                            {
+                                kind: "Education",
+                                institution: {
+                                    name: "Politecnico di Milano",
+                                    pictureUrl:
+                                        "https://identity.stanford.edu/img/block-s-2color.png",
+                                },
+                                degreeLevel: "Ph.D",
+                                fieldOfStudy: "Computer Science",
+                                fromDate: "2015-07-01 00:00:00.000Z",
+                                toDate: "2018-07-01 00:00:00.000Z",
+                            },
+                            {
+                                kind: "Education",
+                                institution: {
+                                    name: "Politecnico di Milano",
+                                    pictureUrl:
+                                        "https://identity.stanford.edu/img/block-s-2color.png",
+                                },
+                                degreeLevel: "Ph.D",
+                                fieldOfStudy: "Computer Science",
+                                fromDate: "2015-07-01 00:00:00.000Z",
+                                toDate: "2018-07-01 00:00:00.000Z",
+                            },
+                        ],
+                    socialAccounts: [],
+                    questionsForAcceptingRequest: [
+                        {
+                            question: "In Software Engineering,briefly explain what the patter Wrapper is used for?",
+                            availableTime: 120,
+                        },
+                        {
+                            question: "Ma sei megaminchia?",
+                            availableTime: 60,
+                        }
+                    ],
+                    workingSpecialization:
+                        ["Software Engineer", "Front End", "Backend"],
 
 
-            }
-        ];
+                },
+                {
+                    kind: "Mentor",
+                    name: "Bobberino",
+                    surname: "Ross",
+                    bio:
+                        "\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"",
+                    location: "Mountain View, US",
+                    company: "Google",
+                    pictureUrl:
+                        "https://b.thumbs.redditmedia.com/7Zlnm0CUqYG2VIdqpc8QA08cvoINPKTvOZDL2kjfmsI.png",
+                    currentJob: {
+                        kind: "Job",
+                        institution: {
+                            name: "Google",
+                            pictureUrl:
+                                "https://freeiconshop.com/wp-content/uploads/edd/google-flat.png",
+                        },
+                        workingRole: "Software Engineer",
+                        fromDate: "2019-03-01 00:00:00.000Z",
+                    },
+                    questions: [
+                        {
+                            question: "Favorite programming languages...",
+                            answer: "Java, Python, C++",
+                        },
+                        {
+                            question: "Dragoni volanti",
+                            answer: "E dove trovarli",
+                        }
+                    ],
+                    pastExperiences:
+                        [
+                            {
+                                kind: "Job",
+                                institution: {
+                                    name: "Apple",
+                                    pictureUrl:
+                                        "https://i.pinimg.com/originals/1c/aa/03/1caa032c47f63d50902b9d34492e1303.jpg",
+                                },
+                                workingRole: "Software Engineer",
+                                fromDate: "2019-03-01 00:00:00.000Z",
+                                toDate: "2019-09-01 00:00:00.000Z",
+                            },
+                            {
+                                kind: "Education",
+                                institution: {
+                                    name: "Stanford University",
+                                    pictureUrl:
+                                        "https://identity.stanford.edu/img/block-s-2color.png",
+                                },
+                                degreeLevel: "Ph.D",
+                                fieldOfStudy: "Computer Science",
+                                fromDate: "2015-07-01 00:00:00.000Z",
+                                toDate: "2018-07-01 00:00:00.000Z",
+                            },
+                            {
+                                kind: "Education",
+                                institution: {
+                                    name: "Politecnico di Milano",
+                                    pictureUrl:
+                                        "https://identity.stanford.edu/img/block-s-2color.png",
+                                },
+                                degreeLevel: "Ph.D",
+                                fieldOfStudy: "Computer Science",
+                                fromDate: "2015-07-01 00:00:00.000Z",
+                                toDate: "2018-07-01 00:00:00.000Z",
+                            }
+                        ],
+                    socialAccounts: [],
+                    questionsForAcceptingRequest: [],
+                    workingSpecialization:
+                        ["Software Engineer"],
+
+
+                },
+                {
+                    kind: "Mentor",
+                    name: "Bob",
+                    surname: "Ross",
+                    bio:
+                        "\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"",
+                    location: "Mountain View, US",
+                    company: "Google",
+                    pictureUrl:
+                        "https://images.csmonitor.com/csm/2015/06/913184_1_0610-larry_standard.jpg?alias=standard_900x600",
+                    currentJob: {
+                        kind: "Job",
+                        institution: {
+                            name: "Google",
+                            pictureUrl:
+                                "https://freeiconshop.com/wp-content/uploads/edd/google-flat.png",
+                        },
+                        workingRole: "Software Engineer",
+                        fromDate: "2019-03-01 00:00:00.000Z",
+                    },
+                    questions: [
+                        {
+                            question: "Favorite programming languages...",
+                            answer: "Java, Python, C++",
+                        },
+                        {
+                            question: "Dragoni volanti",
+                            answer: "E dove trovarli",
+                        }
+                    ],
+                    pastExperiences:
+                        [
+                            {
+                                kind: "Job",
+                                institution: {
+                                    name: "Apple",
+                                    pictureUrl:
+                                        "https://i.pinimg.com/originals/1c/aa/03/1caa032c47f63d50902b9d34492e1303.jpg",
+                                },
+                                workingRole: "Software Engineer",
+                                fromDate: "2019-03-01 00:00:00.000Z",
+                                toDate: "2019-09-01 00:00:00.000Z",
+                            },
+                            {
+                                kind: "Education",
+                                institution: {
+                                    name: "Stanford University",
+                                    pictureUrl:
+                                        "https://identity.stanford.edu/img/block-s-2color.png",
+                                },
+                                degreeLevel: "Ph.D",
+                                fieldOfStudy: "Computer Science",
+                                fromDate: "2015-07-01 00:00:00.000Z",
+                                toDate: "2018-07-01 00:00:00.000Z",
+                            },
+                            {
+                                kind: "Education",
+                                institution: {
+                                    name: "Politecnico di Milano",
+                                    pictureUrl:
+                                        "https://identity.stanford.edu/img/block-s-2color.png",
+                                },
+                                degreeLevel: "Ph.D",
+                                fieldOfStudy: "Computer Science",
+                                fromDate: "2015-07-01 00:00:00.000Z",
+                                toDate: "2018-07-01 00:00:00.000Z",
+                            },
+                            {
+                                kind: "Education",
+                                institution: {
+                                    name: "Politecnico di Milano",
+                                    pictureUrl:
+                                        "https://identity.stanford.edu/img/block-s-2color.png",
+                                },
+                                degreeLevel: "Ph.D",
+                                fieldOfStudy: "Computer Science",
+                                fromDate: "2015-07-01 00:00:00.000Z",
+                                toDate: "2018-07-01 00:00:00.000Z",
+                            },
+                        ],
+                    socialAccounts: [],
+                    questionsForAcceptingRequest: [],
+                    workingSpecialization:
+                        ["Software Engineer", "Front End", "Backend"],
+
+
+                },
+
+            ]
+        ;
+
 
         res.status(200).json(mentors);
-    });
+    })
+;
 
 module.exports = router;
 
