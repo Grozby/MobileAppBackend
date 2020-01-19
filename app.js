@@ -46,9 +46,6 @@ app.use(function (err, req, res, next) {
     return res.sendStatus(err.status || 404);
 });
 
-http.createServer(app).listen(5000, function () {
-    console.log("Listening on port " + 5000 + " ...");
-});
 
 https.createServer({
     key: fs.readFileSync('./config/server.key'),
