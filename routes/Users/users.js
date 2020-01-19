@@ -127,9 +127,32 @@ router.get("/explore",
 
 //Stub call to check if everything is working with the network connectivity of the app.
 router.get("/explorestub",
-    [], function (req, res) {
-        let mentors = Mentor.aggregate([{$sample: {size: 5}}]);
-        res.status(200).json(mentors);
+    config.generalAuth, async function (req, res) {
+        if (req.user.kind === "Mentee") {
+            let mentors = await Mentor.aggregate([{$sample: {size: 7}}])
+                                      .then(function (ms) {
+                                              return ms;
+                                          }
+                                      );
+            mentors.forEach(function(part, index) {
+                part.pastExperiences = part.educationList.concat(part.experienceList);
+                delete part.educationList;
+                delete part.experienceList;
+                this[index] = part;
+            }, mentors);
+
+            return res.status(200).json(mentors);
+        } else if (req.user.kind === "Mentor") {
+            let mentees = await Mentee.aggregate([{$sample: {size: 5}}])
+                                      .then(function (ms) {
+                                              return ms;
+                                          }
+                                      );
+
+            return res.status(200).json(mentees);
+        }
+
+        return res.sendStatus(404);
     })
 ;
 

@@ -54,7 +54,7 @@ passport.use(new BearerStrategy(
                     return done(null, false, {message: 'Registration Not Finished'})
                 }
 
-                let info = {scope: '*'};
+                let info = {scope: 'read'};
                 done(null, user, info);
             });
         });

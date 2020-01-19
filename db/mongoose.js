@@ -43,7 +43,7 @@ async function initializeDatabase () {
                     workingRole: "Software Engineer",
                     fromDate: "2019-03-01 00:00:00.000Z",
                 },
-                questionsList: [
+                questions: [
                     {
                         question: "What are your favourite programming languages?",
                         answer: "Java, Python, C++",
@@ -141,7 +141,7 @@ async function initializeDatabase () {
                     workingRole: "Software Engineer",
                     fromDate: "2019-03-01 00:00:00.000Z",
                 },
-                questionList: [
+                question: [
                     {
                         question: "What are your favourite programming languages?",
                         answer: "Java, Python, C++",
@@ -218,7 +218,7 @@ async function initializeDatabase () {
                     workingRole: "Software Engineer",
                     fromDate: "2019-03-01 00:00:00.000Z",
                 },
-                questionList: [
+                question: [
                     {
                         question: "What are your favourite programming languages?",
                         answer: "Java, Python, C++",

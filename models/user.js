@@ -91,7 +91,7 @@ let UserSchema = new mongoose.Schema({
     experienceList: {
         type: [experience.Work.schema]
     },
-    questionList: {
+    questions: {
         type: [enums.questionSchema]
     },
     workingSpecialization: {
@@ -116,6 +116,10 @@ let UserSchema = new mongoose.Schema({
 
     // notification
 }, options);
+
+UserSchema.methods.validPassword = function (password) {
+    return bcrypt.compareSync(password, this.password);
+};
 
 //TODO: contact options.
 // https://stackoverflow.com/questions/675231/how-do-i-access-properties-of-a-javascript-object-if-i-dont-know-the-names

@@ -2,24 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f7716513-44c7-454a-ae80-783893c39378" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/routes/api/api.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/.name" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Mobile App Server.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/Mobile-Backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Mobile-Backend.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/runConfigurations/bin_www.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/mongoose.js" beforeDir="false" afterPath="$PROJECT_DIR$/db/mongoose.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/contact.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/contact.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/contactOption.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/contactOption.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/enums.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/enums.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/mentor.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/mentor.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/authentication/authentication.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/authentication/authentication.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/user.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/Users/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/Users/users.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/trial_server.js" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -41,7 +27,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="editor.config.ad.shown" value="true" />
-    <property name="javascript.nodejs.core.library.configured.version" value="10.15.1" />
+    <property name="javascript.nodejs.core.library.configured.version" value="12.14.1" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../Duralande-Tool-1-Demo" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
@@ -160,7 +146,7 @@
       <workItem from="1579428733757" duration="2710000" />
       <workItem from="1579439000447" duration="10160000" />
       <workItem from="1579451409725" duration="2420000" />
-      <workItem from="1579453915500" duration="838000" />
+      <workItem from="1579453915500" duration="5824000" />
     </task>
     <servers />
   </component>
@@ -202,21 +188,6 @@
           <url>file://$PROJECT_DIR$/node_modules/mongoose/lib/helpers/model/discriminator.js</url>
           <line>19</line>
           <option name="timeStamp" value="180" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/routes/users/users.js</url>
-          <line>130</line>
-          <option name="timeStamp" value="194" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/routes/users/users.js</url>
-          <line>131</line>
-          <option name="timeStamp" value="195" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/routes/users/users.js</url>
-          <line>82</line>
-          <option name="timeStamp" value="196" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
