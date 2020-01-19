@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-var messageSchema = new mongoose.Schema({
+let messageSchema = new mongoose.Schema({
     messageSender: {
         type: String,
         required: true
@@ -24,9 +24,9 @@ var messageSchema = new mongoose.Schema({
     }
 });
 
-var Message = mongoose.model('Message', messageSchema);
+let Message = mongoose.model('Message', messageSchema);
 
-var contactSchema = new mongoose.Schema({
+let contactSchema = new mongoose.Schema({
     status: {
         type: String,
         enum: ["accepted","refused","pending"],
