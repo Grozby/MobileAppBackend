@@ -3,13 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="f7716513-44c7-454a-ae80-783893c39378" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/mongoose.js" beforeDir="false" afterPath="$PROJECT_DIR$/db/mongoose.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/experience.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/experience.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/user.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/Users/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/Users/users.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/api/api.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api/api.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/users/configHandlers.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/users/configHandlers.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/authentication/authentication.js" beforeDir="false" afterPath="$PROJECT_DIR$/controller/authentication/authentication.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -153,7 +147,7 @@
       <workItem from="1579453915500" duration="6642000" />
       <workItem from="1579504952132" duration="8948000" />
       <workItem from="1579524354204" duration="14477000" />
-      <workItem from="1579595379114" duration="1879000" />
+      <workItem from="1579595379114" duration="10041000" />
     </task>
     <servers />
   </component>
@@ -188,18 +182,13 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/controller/authentication/authentication.js</url>
-          <line>152</line>
+          <line>113</line>
           <option name="timeStamp" value="173" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/node_modules/mongoose/lib/helpers/model/discriminator.js</url>
           <line>19</line>
           <option name="timeStamp" value="180" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/models/user.js</url>
-          <line>194</line>
-          <option name="timeStamp" value="184" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/routes/users/users.js</url>
