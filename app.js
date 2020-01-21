@@ -8,7 +8,6 @@ const passport = require('passport');
 const app = express();
 const fs = require('fs');
 const https = require('https');
-const http = require('http');
 
 //Passport js
 app.use(passport.initialize());
@@ -30,7 +29,7 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
 app.use('/contact', contactRouter);
-app.use('/apu', apiRouter);
+app.use('/api', apiRouter);
 
 
 // catch 404 and forward to error handler

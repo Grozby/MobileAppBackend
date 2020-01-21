@@ -20,6 +20,11 @@ exports.checkSignupMentee = [
     validation.bodyValidated
 ];
 
+exports.checkSignupDecide = [
+    auth.passport.authenticate('bearer'),
+    validation.check('kind')
+];
+
 exports.generalAuth = [
     auth.passport.authenticate('bearer')
 ];

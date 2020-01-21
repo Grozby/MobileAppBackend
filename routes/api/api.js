@@ -2,13 +2,30 @@
 
 let express = require('express');
 let router = express.Router();
-const lodash = require('lodash');
 
-const errorParse = require('../../controller/error_parser');
-const {User} = require('../../models/user.js');
-const {Contact,Message} = require('../../models/contact.js');
-const {mongoose} = require('../../db/mongoose.js');
-mongoose.Promise = require('bluebird');
+router.get("/specializations",
+    function (req, res) {
+        return res.json([
+            'Software Engineer',
+            'Full-Stack',
+            'Front-End',
+            'Back-End',
+            'Machine Learning',
+            'Python',
+            'C++',
+            'iOS',
+            'Android',
+            'Mobile Dev.'
+        ]);
+    });
+
+router.get("/questions",
+    function (req, res) {
+        return res.json([
+            'What are your favourite programming languages?',
+            'What inspires you the most in your work?'
+        ]);
+    });
 
 module.exports = router;
 

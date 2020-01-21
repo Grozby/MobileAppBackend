@@ -82,8 +82,7 @@ let UserSchema = new mongoose.Schema({
         type: mongoose.SchemaTypes.Url
     },
     currentJob: {
-        type: experience.Work.schema,
-        required: true,
+        type: experience.Work.schema
     },
     educationList: {
         type: [experience.Education.schema]
@@ -107,7 +106,8 @@ let UserSchema = new mongoose.Schema({
                 'C++',
                 'iOS',
                 'Android',
-                'Mobile Dev.'],
+                'Mobile Dev.'
+            ],
         }]
     },
     questionsForAcceptingRequest: {
@@ -189,18 +189,33 @@ UserSchema.statics.exploreSection = function () {
     });
 };
 
-
-// Run code before firing events (Middleware)!!!
+// If the password is updated, then we use bcrypt to hash it.
 UserSchema.pre('save', function (next) {
-    var user = this;
-
-    // Call this function when the password field is modified
+    let user = this;
     if (user.isModified('password')) {
         // Overwrite plain password with hashed password
         bcrypt.genSalt(10, function (error, salt) {
             bcrypt.hash(user.password, salt, function (error, hash) {
                 user.password = hash;
-                next(); // Move on and save()
+                next();
+            });
+        });
+    } else {
+        next();
+    }
+});
+
+
+UserSchema.pre('findOneAndUpdate', function (next) {
+    let user = this._update;
+
+    // Call this function when the password field is modified
+    if (user.password !== undefined) {
+        // Overwrite plain password with hashed password
+        bcrypt.genSalt(10, function (error, salt) {
+            bcrypt.hash(user.password, salt, function (error, hash) {
+                user.password = hash;
+                next();
             });
         });
     } else {

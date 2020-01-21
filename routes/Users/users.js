@@ -15,22 +15,6 @@ mongoose.Promise = require('bluebird');
 //  Registration
 //-------------------
 
-router.post("/signup_complete/mentor",
-    config.checkSignupMentor,
-    function (req, res) {
-        req.body = lodash.pick(req.body, ['email', 'password', 'name', 'surname', 'referralCompany', 'workingRole', 'state', 'experienceList', 'educationList',
-            'questionList', 'tagList', 'contactOpt'
-        ]);
-        let mentor = new Mentor(req.body);
-
-        mentor.save()
-              .then(() => { //if user not present in the Database, we add it
-                  return res.sendStatus(201);
-              })
-              .catch(error => { //Otherwise, we proceed in sending what went wrong.
-                  return res.status(400).json(errorParse.parseRegistrationError(error));
-              });
-    });
 
 router.post("/signup/mentor",
     config.checkSignupMentor,
@@ -60,6 +44,21 @@ router.post("/signup/mentee",
               .catch(error => { //Otherwise, we proceed in sending what went wrong.
                   return res.status(400).json(errorParse.parseRegistrationError(error));
               });
+    }
+);
+
+router.post("/signup/decide",
+    config.checkSignupDecide,
+    async function (req, res) {
+        let kind = req.body.kind;
+
+        if (req.user.kind === undefined && ["Mentor", "Mentee"].includes(kind)) {
+            req.user.kind = kind;
+            await req.user.save();
+            return res.sendStatus(200);
+        }
+
+        return res.sendStatus(400);
     }
 );
 
@@ -109,6 +108,7 @@ router.get("/profile",
     });
 
 router.get("/profile/:id",
+    config.generalAuth,
     function (req, res) {
         User.getProfile(req.params.id)
             .then((profileResponse) =>
@@ -116,43 +116,53 @@ router.get("/profile/:id",
             .catch((error) => res.status(400).json(error))
     });
 
+router.patch("/profile",
+    config.generalAuth,
+    async function (req, res) {
+        if (req.body.kind !== undefined ||
+            req.body.email !== undefined ||
+            req.body._id !== undefined) {
+            return res.sendStatus(400);
+        }
+
+        await User.findOneAndUpdate(
+            {email: req.user.email},
+            req.body,
+            {new: true, runValidators: true}
+        ).then(function () {
+                res.sendStatus(200);
+            }
+        ).catch(function (e) {
+                res.sendStatus(400);
+            }
+        );
+    }
+);
+
 
 router.get("/explore",
     config.generalAuth,
-    function (req, res) {
-        User.exploreSection(req.user.id)
-            .then((exploreResponse) => res.status(201).json(exploreResponse))
-            .catch((error) => res.status(400).json(error))
-    });
-
-//Stub call to check if everything is working with the network connectivity of the app.
-router.get("/explorestub",
-    config.generalAuth, async function (req, res) {
-        if (req.user.kind === "Mentee") {
-            let mentors = await Mentor.aggregate([{$sample: {size: 7}}])
-                                      .then(function (ms) {
-                                              return ms;
-                                          }
-                                      );
-            mentors.forEach(function(part, index) {
-                part.pastExperiences = part.educationList.concat(part.experienceList);
-                delete part.educationList;
-                delete part.experienceList;
-                this[index] = part;
-            }, mentors);
-
-            return res.status(200).json(mentors);
-        } else if (req.user.kind === "Mentor") {
-            let mentees = await Mentee.aggregate([{$sample: {size: 5}}])
-                                      .then(function (ms) {
-                                              return ms;
-                                          }
-                                      );
-
-            return res.status(200).json(mentees);
+    async function (req, res) {
+        let results;
+        switch (req.user.kind) {
+            case "Mentee":
+                results = await Mentor.aggregate([{$sample: {size: 7}}]);
+                break;
+            case "Mentor":
+                results = await Mentee.aggregate([{$sample: {size: 5}}]);
+                break;
+            default:
+                return res.sendStatus(400);
         }
 
-        return res.sendStatus(404);
+        results.forEach(function (part, index) {
+            part.pastExperiences = [...part.educationList, ...part.experienceList];
+            delete part.educationList;
+            delete part.experienceList;
+            this[index] = part;
+        }, results);
+
+        return res.status(200).json(results);
     })
 ;
 

@@ -17,10 +17,6 @@ const experienceSchema = new mongoose.Schema({
     toDate: {
         type: Date,
     },
-    nowDoing: {         // If this boolean is true, then the user is still doing this experience in the present (so there is no need of toMonth and toYear)
-        type: Boolean,
-        default: false
-    }
 }, options);
 
 // Defining the experience models

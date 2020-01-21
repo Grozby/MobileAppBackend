@@ -5,7 +5,7 @@ const {Mentor} = require("../models/user");
 mongoose.set('debug', true);
 mongoose.set('useFindAndModify', false);
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://159.89.15.169:27017/mobileapp', {
+mongoose.connect('mongodb://localhost:27017/mobileapp', {
     useNewUrlParser: true,
     reconnectTries: Number.MAX_VALUE,
     autoReconnect: true
