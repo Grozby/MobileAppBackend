@@ -48,8 +48,7 @@ let UserSchema = new mongoose.Schema({
 
     },
     location: {
-        type: String,
-        default: 'US'
+        type: String
     },
     googleId: {
         type: String,
@@ -116,6 +115,40 @@ let UserSchema = new mongoose.Schema({
 
     // notification
 }, options);
+
+UserSchema.options.toObject = {
+    transform: function(doc, ret) {
+        ret.pastExperiences = [
+            ...ret.educationList,
+            ...ret.experienceList
+        ];
+        delete ret.educationList;
+        delete ret.experienceList;
+        delete ret.password;
+
+        let socialAccountList = [
+            "twitter", "github", "facebook", "linkedin", "instagram"
+        ];
+
+        ret.socialAccounts = socialAccountList
+            .map((e) => {
+                if (ret[e] != null) {
+                    return {
+                        "type": e,
+                        "urlAccount": ret[e]
+                    }
+                }
+            })
+            .filter(e => e != null);
+        delete ret.twitter;
+        delete ret.github;
+        delete ret.linkedin;
+        delete ret.instagram;
+        delete ret.facebook;
+
+        return ret;
+    }
+};
 
 UserSchema.methods.validPassword = function (password) {
     return bcrypt.compareSync(password, this.password);

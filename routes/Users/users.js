@@ -52,7 +52,7 @@ router.post("/signup/decide",
     async function (req, res) {
         let kind = req.body.kind;
 
-        if (req.user.kind === undefined && ["Mentor", "Mentee"].includes(kind)) {
+        if (req.user.kind === "User" && ["Mentor", "Mentee"].includes(kind)) {
             req.user.kind = kind;
             await req.user.save();
             return res.sendStatus(200);
@@ -78,41 +78,16 @@ router.get("/minimalprofile",
 router.get("/profile",
     config.generalAuth,
     function (req, res) {
-
-        let socialAccountList = [
-            "twitter", "github", "facebook", "linkedin", "instagram"
-        ];
-
-        return res.json({
-            kind: req.user.kind,
-            name: req.user.name,
-            surname: req.user.surname,
-            pictureUrl: req.user.pictureUrl,
-            location: req.user.location,
-            bio: req.user.bio,
-            currentJob: req.user.currentJob,
-            pastExperiences: [...req.user.educationList, ...req.user.experienceList],
-            questions: req.user.questionList,
-            tokenWallet: req.user.tokens_wallet,
-            socialAccounts: socialAccountList
-                .map((e) => {
-                    if (req.user[e] != null) {
-                        return {
-                            "type": e,
-                            "urlAccount": req.user[e]
-                        }
-                    }
-                })
-                .filter(e => e != null),
-        })
+        return res.json(req.user.toObject());
     });
 
 router.get("/profile/:id",
     config.generalAuth,
     function (req, res) {
-        User.getProfile(req.params.id)
+        User.findById(req.params.id)
             .then((profileResponse) =>
-                res.status(200).json(profileResponse == null ? {} : profileResponse))
+                res.status(200).json(profileResponse == null ? {} : profileResponse.toObject())
+            )
             .catch((error) => res.status(400).json(error))
     });
 
@@ -129,12 +104,9 @@ router.patch("/profile",
             {email: req.user.email},
             req.body,
             {new: true, runValidators: true}
-        ).then(function () {
-                res.sendStatus(200);
-            }
-        ).catch(function (e) {
-                res.sendStatus(400);
-            }
+        ).then(() => res.sendStatus(200)
+        ).catch((e) =>
+            res.sendStatus(400)
         );
     }
 );
