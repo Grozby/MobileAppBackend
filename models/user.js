@@ -193,35 +193,6 @@ UserSchema.statics.decreaseToken = function (id) {
 };
 
 
-UserSchema.statics.getQuiz = function (id) {
-    return User.findOne({_id: id}, {'contactOpt.question': 1, 'contactOpt.timeInMinutes': 1});
-};
-
-UserSchema.statics.getContactInfo = function (id) {
-    return User.findOne({_id: id}, {
-        'contactOpt.kind': 1,
-        'contactOpt.timeInMinutes': 1,
-        name: 1,
-        surname: 1,
-        referralCompany: 1,
-        profilePicture: 1,
-        location: 1,
-        workingRole: 1
-    });
-};
-
-// Schema method to find an User starting from its token
-UserSchema.statics.exploreSection = function () {
-    return User.find({kind: 'Mentor'}, {
-        email: 0,
-        password: 0,
-        pseudonym: 0,
-        tokens: 0,
-        cost_in_tokens: 0,
-        contactOpt: 0
-    });
-};
-
 // If the password is updated, then we use bcrypt to hash it.
 UserSchema.pre('save', function (next) {
     let user = this;
