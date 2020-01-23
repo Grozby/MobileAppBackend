@@ -154,6 +154,15 @@ UserSchema.methods.validPassword = function (password) {
     return bcrypt.compareSync(password, this.password);
 };
 
+UserSchema.method('minimalProfile', function () {
+    return {
+        "_id": this._id,
+        "name": this.name,
+        "surname": this.surname,
+        "pictureUrl": this.pictureUrl
+    }
+});
+
 //TODO: contact options.
 // https://stackoverflow.com/questions/675231/how-do-i-access-properties-of-a-javascript-object-if-i-dont-know-the-names
 

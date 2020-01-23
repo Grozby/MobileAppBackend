@@ -7,7 +7,7 @@ const lodash = require('lodash');
 const errorParse = require('../../controller/error_parser');
 let ObjectId = require('mongoose').Types.ObjectId;
 
-const {AnswersQuestions} = require("../../models/answer");
+const {ContactMentor} = require("../../models/contact");
 const {User, Mentor, Mentee} = require('../../models/user.js');
 const {mongoose} = require('../../db/mongoose.js');
 mongoose.Promise = require('bluebird');
@@ -69,11 +69,7 @@ router.post("/signup/decide",
 router.get("/minimalprofile",
     config.generalAuth,
     function (req, res) {
-        return res.json({
-            kind: req.user.kind,
-            name: req.user.email,
-            profilePicture: req.user.pictureUrl,
-        })
+        return res.status(200).json(req.user.minimalProfile());
     });
 
 router.get("/profile",
@@ -119,16 +115,16 @@ router.get("/explore",
 
         switch (req.user.kind) {
             case "Mentee":
-                let contactedMentorsId = await AnswersQuestions.find({"menteeId": req.user._id})
-                                                               .then((list) => list.map((e) => ObjectId(e.mentorId)));
+                let contactedMentorsId = await ContactMentor.find({"menteeId": req.user._id})
+                                                            .then((list) => list.map((e) => ObjectId(e.mentorId)));
                 results = await Mentor.aggregate([
                     {"$match": {"_id": {"$nin": contactedMentorsId}}},
                     {$sample: {size: 7}}
                 ]);
                 break;
             case "Mentor":
-                let contactedMenteesId = await AnswersQuestions.find({"mentorId": req.user._id})
-                                                               .then((list) => list.map((e) => ObjectId(e.menteeId)));
+                let contactedMenteesId = await ContactMentor.find({"mentorId": req.user._id})
+                                                            .then((list) => list.map((e) => ObjectId(e.menteeId)));
                 results = await Mentee.aggregate([
                     {"$match": {"_id": {"$in": contactedMenteesId}}},
                     {$sample: {size: 7}}
@@ -153,12 +149,16 @@ router.post(
     "/sendrequest/:mentorid",
     config.generalAuth,
     async function (req, res) {
-        if (req.body === undefined) {
+        if (req.body === undefined || req.body.answers === undefined || req.body.startingMessage === undefined) {
             return res.status(400).json({"message": "No body."});
         }
 
+        if (req.user.kind !== "Mentee") {
+            return res.status(400).json({"message": "A mentor cannot contact another mentor."});
+        }
+
         let mentor = await User.findById(req.params.mentorid);
-        let contact = await AnswersQuestions.findOne({
+        let contact = await ContactMentor.findOne({
             "mentorId": req.params.mentorid,
             "menteeId": req.user._id,
         });
@@ -176,29 +176,73 @@ router.post(
         let answers = [];
         for (let i = 0; i < mentor.questionsForAcceptingRequest.length; i++) {
 
-            if (req.body[i] === undefined ||
-                (req.body[i].textAnswer === undefined && req.body[i].audioAnswer === undefined)) {
-                return res.status(400).json({"message": "No body."});
+            if (req.body.answers === undefined || req.body.answers[i] === undefined ||
+                (req.body.answers[i].textAnswer === undefined && req.body.answers[i].audioAnswer === undefined)) {
+                return res.status(400).json({"message": "No answers."});
             }
 
             answers.push(
                 {
                     "question": mentor.questionsForAcceptingRequest[i].question,
-                    "textAnswer": req.body[i].textAnswer ? req.body[i].textAnswer : "",
-                    "audioAnswer": req.body[i].audioAnswer ? req.body[i].audioAnswer : "",
+                    "textAnswer": req.body.answers[i].textAnswer ? req.body.answers[i].textAnswer : "",
+                    "audioAnswer": req.body.answers[i].audioAnswer ? req.body.answers[i].audioAnswer : "",
                 }
             );
         }
 
-        let aq = AnswersQuestions({
+        let aq = ContactMentor({
             "menteeId": req.user._id,
             "mentorId": req.params.mentorid,
+            "startingMessage": req.body.startingMessage,
             "answers": answers,
         });
         await aq.save();
         return res.sendStatus(200);
     });
 
+router.get("/contactrequest",
+    config.generalAuth,
+    async function (req, res) {
+        let results;
+        switch (req.user.kind) {
+            case "Mentee":
+                results = await ContactMentor
+                    .find({"menteeId": req.user._id})
+                    .then(async (list) => await Promise.all(list.map(async function (e) {
+                            e = e.toObject();
+                            e.mentor = await Mentor.findById(e.mentorId).then((e) => e.minimalProfile());
+                            delete e.mentorId;
+                            return e;
+                        }
+                    )));
+                break;
+            case "Mentor":
+                results = await ContactMentor
+                    .find({"mentorId": req.user._id})
+                    .then(async (list) => await Promise.all(list.map(async function (e) {
+                            e = e.toObject();
+                            e.mentee = await Mentee.findById(e.menteeId).then((e) => e.minimalProfile());
+                            delete e.menteeId;
+                            return e;
+                        }
+                    )));
+                break;
+            default:
+                return res.sendStatus(400);
+        }
+
+        return res.status(200).json(results);
+    });
+
+router.get("/contactrequest/:idrequest",
+    config.generalAuth,
+    async function (req, res) {
+        let result = await ContactMentor.findById(req.params.idrequest)
+                                        .then(e => e.toObject())
+                                        .catch(e => null);
+
+        return result !== null ? res.status(200).json(result) : res.sendStatus(400);
+    });
 
 module.exports = router;
 
