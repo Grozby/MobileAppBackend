@@ -1,248 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a6afb8bb-07b6-450c-adb5-bfdf4b6acd71" name="Default Changelist" comment="">
+    <list default="true" id="f7716513-44c7-454a-ae80-783893c39378" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/Mobile-Backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Mobile-Backend.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-<<<<<<< Updated upstream
-      <change beforePath="$PROJECT_DIR$/models/education.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/education.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/enums.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/enums.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/experience.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/experience.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/institution.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/institution.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/mentee.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/mentee.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/mentor.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/mentor.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/user.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/work.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/work.js" afterDir="false" />
-=======
       <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/Users/stubs/login.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/Users/stubs/signupMentee.json" beforeDir="false" />
->>>>>>> Stashed changes
+      <change beforePath="$PROJECT_DIR$/models/contact.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/contact.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/contactOption.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/user.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/Users/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/Users/users.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/trial_server.js" beforeDir="false" afterPath="$PROJECT_DIR$/trial_server.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/chat/chat.js" beforeDir="false" />
     </list>
-    <ignored path="$PROJECT_DIR$/.tmp/" />
-    <ignored path="$PROJECT_DIR$/temp/" />
-    <ignored path="$PROJECT_DIR$/tmp/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
-  <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-<<<<<<< Updated upstream
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/work.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="92">
-              <caret line="4" selection-start-line="4" selection-end-line="4" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/mentee.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="184">
-              <caret line="8" selection-start-line="8" selection-end-line="8" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/user.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="135">
-              <caret line="117" selection-start-line="117" selection-end-line="117" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/mentor.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="299">
-              <caret line="13" column="6" selection-start-line="13" selection-start-column="6" selection-end-line="13" selection-end-column="6" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/trial_server.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="246">
-              <caret line="71" column="3" lean-forward="true" selection-start-line="71" selection-start-column="3" selection-end-line="71" selection-end-column="3" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/mentee_register_test">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="644">
-              <caret line="28" column="5" lean-forward="true" selection-start-line="28" selection-start-column="5" selection-end-line="28" selection-end-column="5" />
-=======
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/routes/Users/users.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="146">
-              <caret line="104" column="18" selection-start-line="104" selection-start-column="18" selection-end-line="104" selection-end-column="18" />
->>>>>>> Stashed changes
-            </state>
-          </provider>
-        </entry>
-      </file>
-    </leaf>
-  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="tsconfig.json" />
         <option value="JavaScript File" />
       </list>
     </option>
   </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>state</find>
-      <find>kind</find>
-      <find>might alre</find>
-    </findStrings>
-    <dirStrings>
-      <dir>$PROJECT_DIR$</dir>
-    </dirStrings>
-  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="IdeDocumentHistory">
-    <option name="CHANGED_PATHS">
-      <list>
-        <option value="$PROJECT_DIR$/routes/users.js" />
-        <option value="$PROJECT_DIR$/.env" />
-        <option value="$PROJECT_DIR$/routes/Users/stubs/signupMentee.json" />
-        <option value="$PROJECT_DIR$/routes/Users/stubs/login.json" />
-        <option value="$PROJECT_DIR$/routes/Users/stubs/signupMentor.json" />
-        <option value="$PROJECT_DIR$/utilities/private.key" />
-        <option value="$PROJECT_DIR$/utilities/public.key" />
-        <option value="$PROJECT_DIR$/routes/jwt.js" />
-        <option value="$PROJECT_DIR$/config/jwtSignOptions.json" />
-        <option value="$PROJECT_DIR$/routes/Users/jwt.js" />
-        <option value="$PROJECT_DIR$/controller/authentication/jwt.js" />
-        <option value="$PROJECT_DIR$/app.js" />
-        <option value="$PROJECT_DIR$/routes/Users/Registration.js" />
-<<<<<<< Updated upstream
-        <option value="$PROJECT_DIR$/db/mongoose.js" />
-        <option value="$PROJECT_DIR$/server/server.js" />
-        <option value="$PROJECT_DIR$/test_call" />
-        <option value="$PROJECT_DIR$/models/profile.js" />
-        <option value="$PROJECT_DIR$/models/Institution.js" />
-        <option value="$PROJECT_DIR$/models/schoolDegree.js" />
-        <option value="$PROJECT_DIR$/models/tag.js" />
-        <option value="$PROJECT_DIR$/models/contact_test.js" />
-        <option value="$PROJECT_DIR$/routes/Users/users.js" />
-        <option value="$PROJECT_DIR$/models/work.js" />
-        <option value="$PROJECT_DIR$/models/experience.js" />
-        <option value="$PROJECT_DIR$/models/enums.js" />
-        <option value="$PROJECT_DIR$/mentor_register_test" />
-        <option value="$PROJECT_DIR$/models/mentor.js" />
-        <option value="$PROJECT_DIR$/models/mentee.js" />
-        <option value="$PROJECT_DIR$/models/institution.js" />
-        <option value="$PROJECT_DIR$/models/education.js" />
-        <option value="$PROJECT_DIR$/models/user.js" />
-        <option value="$PROJECT_DIR$/mentee_register_test" />
-        <option value="$PROJECT_DIR$/trial_server.js" />
-=======
-        <option value="$PROJECT_DIR$/routes/Users/users.js" />
->>>>>>> Stashed changes
-      </list>
-    </option>
+  <component name="JsFlowSettings">
+    <service-enabled>true</service-enabled>
+    <exe-path />
+    <other-services-enabled>true</other-services-enabled>
+    <auto-save>true</auto-save>
   </component>
-  <component name="ProjectFrameBounds" extendedState="6">
-<<<<<<< Updated upstream
-    <option name="y" value="23" />
-    <option name="width" value="640" />
-    <option name="height" value="777" />
-=======
-    <option name="x" value="170" />
-    <option name="y" value="50" />
-    <option name="width" value="3500" />
-    <option name="height" value="2060" />
->>>>>>> Stashed changes
-  </component>
-  <component name="ProjectView">
-    <navigator proportions="" version="1">
-      <foldersAlwaysOnTop value="true" />
-    </navigator>
-    <panes>
-      <pane id="ProjectPane">
-        <subPane>
-          <expand>
-            <path>
-              <item name="Mobile App Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Mobile-Backend" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Mobile App Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Mobile-Backend" type="462c0819:PsiDirectoryNode" />
-              <item name="config" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Mobile App Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Mobile-Backend" type="462c0819:PsiDirectoryNode" />
-              <item name="controller" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Mobile App Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Mobile-Backend" type="462c0819:PsiDirectoryNode" />
-              <item name="controller" type="462c0819:PsiDirectoryNode" />
-              <item name="authentication" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Mobile App Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Mobile-Backend" type="462c0819:PsiDirectoryNode" />
-              <item name="routes" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Mobile App Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Mobile-Backend" type="462c0819:PsiDirectoryNode" />
-              <item name="routes" type="462c0819:PsiDirectoryNode" />
-              <item name="Users" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Mobile App Server" type="b2602c69:ProjectViewProjectNode" />
-              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
-            </path>
-          </expand>
-          <select />
-        </subPane>
-      </pane>
-      <pane id="Scope" />
-    </panes>
-  </component>
+  <component name="ProjectId" id="1R69CoU7eHNmpqOo4Rsl3IX3icd" />
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="javascript.nodejs.core.library.configured.version" value="10.15.1" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/controller/authentication" />
-    <property name="nodejs_interpreter_path" value="node" />
+    <property name="editor.config.ad.shown" value="true" />
+    <property name="javascript.nodejs.core.library.configured.version" value="12.14.1" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Duralande-Tool-1-Demo" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
-    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.JavaScript" />
+    <property name="restartRequiresConfirmation" value="false" />
+    <property name="settings.editor.selected.configurable" value="JavaScript.Libraries" />
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2018.3.4\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Gabri\Desktop\Works\Mobile-Backend\routes\Users\stubs" />
+      <recent name="C:\Users\Gabri\Desktop\Works\Mobile-Backend\config" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Gabri\Desktop\Works\Mobile-Backend\controller\authentication" />
-      <recent name="C:\Users\Gabri\Desktop\Works\Mobile-Backend\config" />
-      <recent name="C:\Users\Gabri\Desktop\Works\Mobile-Backend\routes\Users" />
-      <recent name="C:\Users\Gabri\Desktop\Works\Mobile-Backend\routes\Users\stubs" />
+      <recent name="C:\Users\Gabri\Desktop\Works\Mobile-Backend\routes\users" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -261,9 +76,13 @@
     <configuration name="app.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/app.js" working-dir="$PROJECT_DIR$">
       <method v="2" />
     </configuration>
+    <configuration name="trial_server.js" type="NodeJSConfigurationType" temporary="true" nameIsGenerated="true" path-to-js-file="$PROJECT_DIR$/trial_server.js" working-dir="$PROJECT_DIR$">
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
         <item itemvalue="Node.js.app.js" />
+        <item itemvalue="Node.js.trial_server.js" />
       </list>
     </recent_temporary>
   </component>
@@ -272,329 +91,144 @@
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="a6afb8bb-07b6-450c-adb5-bfdf4b6acd71" name="Default Changelist" comment="" />
-      <created>1563449204578</created>
+      <changelist id="f7716513-44c7-454a-ae80-783893c39378" name="Default Changelist" comment="" />
+      <created>1563664965000</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1563449204578</updated>
-      <workItem from="1563449207195" duration="495000" />
-      <workItem from="1563450181539" duration="70000" />
-      <workItem from="1563450316452" duration="506000" />
-<<<<<<< Updated upstream
-      <workItem from="1563450825718" duration="16860000" />
-      <workItem from="1563523412739" duration="5245000" />
-      <workItem from="1563532569748" duration="1207000" />
-      <workItem from="1563551876439" duration="6048000" />
-      <workItem from="1563603148477" duration="8779000" />
+      <updated>1563664965000</updated>
+      <workItem from="1563664968406" duration="32046000" />
+      <workItem from="1564923047355" duration="599000" />
+      <workItem from="1565208344145" duration="5396000" />
+      <workItem from="1565540917309" duration="3101000" />
+      <workItem from="1565620344782" duration="5423000" />
+      <workItem from="1565691000297" duration="3036000" />
+      <workItem from="1566173344338" duration="1831000" />
+      <workItem from="1567009946491" duration="618000" />
+      <workItem from="1568021645354" duration="18731000" />
+      <workItem from="1568388283440" duration="599000" />
+      <workItem from="1568712885473" duration="5576000" />
+      <workItem from="1568796995831" duration="2540000" />
+      <workItem from="1568974014312" duration="893000" />
+      <workItem from="1568975658574" duration="39000" />
+      <workItem from="1568975815779" duration="434000" />
+      <workItem from="1568976560241" duration="11855000" />
+      <workItem from="1568995059638" duration="3217000" />
+      <workItem from="1570539553968" duration="2463000" />
+      <workItem from="1570610194312" duration="4985000" />
+      <workItem from="1570662285612" duration="944000" />
+      <workItem from="1570699924060" duration="1811000" />
+      <workItem from="1571090914299" duration="3192000" />
+      <workItem from="1571127145579" duration="20000" />
+      <workItem from="1571140959130" duration="2266000" />
+      <workItem from="1574762604962" duration="4240000" />
+      <workItem from="1574776243470" duration="7961000" />
+      <workItem from="1575044926041" duration="602000" />
+      <workItem from="1575045571326" duration="5096000" />
+      <workItem from="1575322487381" duration="4383000" />
+      <workItem from="1576268071998" duration="4109000" />
+      <workItem from="1576439596593" duration="9082000" />
+      <workItem from="1576545836014" duration="1813000" />
+      <workItem from="1576610434259" duration="9322000" />
+      <workItem from="1576744942713" duration="13913000" />
+      <workItem from="1576836578938" duration="5989000" />
+      <workItem from="1577043778210" duration="7337000" />
+      <workItem from="1577096415790" duration="9435000" />
+      <workItem from="1577182197221" duration="2436000" />
+      <workItem from="1577451330198" duration="8962000" />
+      <workItem from="1577712465222" duration="5091000" />
+      <workItem from="1577962580467" duration="1031000" />
+      <workItem from="1577997770816" duration="670000" />
+      <workItem from="1578008772764" duration="1957000" />
+      <workItem from="1578046868407" duration="605000" />
+      <workItem from="1578056467558" duration="677000" />
+      <workItem from="1578058431838" duration="648000" />
+      <workItem from="1578161958724" duration="605000" />
+      <workItem from="1578220049076" duration="618000" />
+      <workItem from="1578304997981" duration="606000" />
+      <workItem from="1578386284794" duration="2484000" />
+      <workItem from="1578472794332" duration="4872000" />
+      <workItem from="1578561757436" duration="6176000" />
+      <workItem from="1578739519747" duration="1215000" />
+      <workItem from="1579182546964" duration="17000" />
+      <workItem from="1579211684642" duration="7309000" />
+      <workItem from="1579335470256" duration="5233000" />
+      <workItem from="1579377481419" duration="1684000" />
+      <workItem from="1579428733757" duration="2710000" />
+      <workItem from="1579439000447" duration="10160000" />
+      <workItem from="1579451409725" duration="2420000" />
+      <workItem from="1579453915500" duration="6642000" />
+      <workItem from="1579504952132" duration="8948000" />
+      <workItem from="1579524354204" duration="14477000" />
+      <workItem from="1579595379114" duration="14949000" />
+      <workItem from="1579646131616" duration="1735000" />
+      <workItem from="1579679055566" duration="20289000" />
+      <workItem from="1579731658801" duration="5298000" />
+      <workItem from="1579769903238" duration="8131000" />
     </task>
-    <task id="LOCAL-00001" summary="Added mongoose configuration with remote DB&#10;Added model &#10;Added trial_server to test simple model functions">
-      <created>1563603286222</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1563603286222</updated>
-=======
-      <workItem from="1563450825718" duration="17460000" />
->>>>>>> Stashed changes
-    </task>
-    <option name="localTasksCounter" value="2" />
     <servers />
-  </component>
-  <component name="TimeTrackingManager">
-<<<<<<< Updated upstream
-    <option name="totallyTimeSpent" value="39210000" />
-  </component>
-  <component name="ToolWindowManager">
-    <frame x="0" y="23" width="1280" height="777" extended-state="6" />
-=======
-    <option name="totallyTimeSpent" value="18531000" />
-  </component>
-  <component name="ToolWindowManager">
-    <frame x="-6" y="-6" width="1549" height="877" extended-state="6" />
-    <editor active="true" />
->>>>>>> Stashed changes
-    <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24966975" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="npm" order="2" side_tool="true" />
-      <window_info id="Favorites" order="3" side_tool="true" />
-<<<<<<< Updated upstream
-      <window_info anchor="bottom" id="Messages" weight="0.32884902" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32735425" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.26158446" />
-=======
-      <window_info anchor="bottom" id="TypeScript" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32871014" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.47434118" />
->>>>>>> Stashed changes
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.3994452" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="8" />
-      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-<<<<<<< Updated upstream
-      <window_info anchor="bottom" id="Terminal" order="10" weight="0.32735425" />
-      <window_info anchor="bottom" id="TypeScript" order="11" />
-=======
-      <window_info anchor="bottom" id="Terminal" order="10" weight="0.32871014" />
->>>>>>> Stashed changes
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-    </layout>
-    <layout-to-restore>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24966975" />
-      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info id="npm" order="2" side_tool="true" />
-      <window_info id="Favorites" order="3" side_tool="true" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32871014" />
-      <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
-      <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="8" />
-      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
-      <window_info anchor="bottom" id="Terminal" order="10" weight="0.32871014" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
-      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-    </layout-to-restore>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added mongoose configuration with remote DB&#10;Added model &#10;Added trial_server to test simple model functions" />
-    <MESSAGE value="Modification in the model&#10;Tested endpoint with trial_server" />
-    <option name="LAST_COMMIT_MESSAGE" value="Modification in the model&#10;Tested endpoint with trial_server" />
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
-  <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/views/index.pug">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/error.pug">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/express/lib/express.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-256">
-          <caret line="71" selection-start-line="71" selection-end-line="71" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.env">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/Users/stubs/signupMentor.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="115">
-          <caret line="5" column="5" selection-start-line="5" selection-start-column="5" selection-end-line="5" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/Users/stubs/login.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="46">
-          <caret line="2" column="14" selection-start-line="2" selection-start-column="14" selection-end-line="2" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/jwtSignOptions.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="23">
-<<<<<<< Updated upstream
-          <caret line="1" selection-start-line="1" selection-end-line="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/contact.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/profile.js" />
-    <entry file="file://$PROJECT_DIR$/models/contact_test.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="129">
-          <caret line="17" column="2" selection-start-line="17" selection-start-column="2" selection-end-line="17" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-582">
-          <caret line="12" selection-start-line="12" selection-end-line="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/mongodb-core/lib/error.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="104">
-          <caret line="42" column="11" selection-start-line="42" selection-start-column="11" selection-end-line="42" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/Users/users.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
-          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mentor_register_test">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="782">
-          <caret line="34" column="1" selection-start-line="34" selection-start-column="1" selection-end-line="34" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/mentor.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="299">
-          <caret line="13" column="6" selection-start-line="13" selection-start-column="6" selection-end-line="13" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/institution.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="276">
-          <caret line="12" selection-start-line="12" selection-end-line="12" />
-=======
-          <caret line="1" column="25" selection-start-line="1" selection-start-column="25" selection-end-line="1" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/public.key">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="115">
-          <caret line="5" column="24" selection-start-line="5" selection-start-column="24" selection-end-line="5" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/config/private.key">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="322">
-          <caret line="14" column="29" selection-start-line="14" selection-start-column="29" selection-end-line="14" selection-end-column="29" />
->>>>>>> Stashed changes
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-<<<<<<< Updated upstream
-        <state relative-caret-position="-325">
-          <caret line="1" lean-forward="true" selection-start-line="1" selection-end-line="1" />
-=======
-        <state relative-caret-position="46">
-          <caret line="2" selection-start-line="2" selection-end-line="2" />
->>>>>>> Stashed changes
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/javascript/extLibs/global-types/node_modules/@types/express-serve-static-core/index.d.ts">
-      <provider selected="true" editor-type-id="text-editor">
-<<<<<<< Updated upstream
-        <state relative-caret-position="92">
-          <caret line="4" selection-start-line="4" selection-end-line="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/education.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="460">
-          <caret line="20" selection-start-line="20" selection-end-line="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/experience.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="230">
-          <caret line="10" column="22" lean-forward="true" selection-start-line="10" selection-start-column="22" selection-end-line="10" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mentee_register_test">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="644">
-          <caret line="28" column="5" lean-forward="true" selection-start-line="28" selection-start-column="5" selection-end-line="28" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/mentee.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="184">
-          <caret line="8" selection-start-line="8" selection-end-line="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/user.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="135">
-          <caret line="117" selection-start-line="117" selection-end-line="117" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trial_server.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="246">
-          <caret line="71" column="3" lean-forward="true" selection-start-line="71" selection-start-column="3" selection-end-line="71" selection-end-column="3" />
-=======
-        <state relative-caret-position="227">
-          <caret line="45" column="4" selection-start-line="45" selection-start-column="4" selection-end-line="45" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/express/lib/router/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="872">
-          <caret line="283" column="6" selection-start-line="283" selection-start-column="6" selection-end-line="283" selection-end-column="6" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/Users/stubs/signupMentee.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="46">
-          <caret line="2" column="25" selection-start-line="2" selection-start-column="25" selection-end-line="2" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="20" column="26" lean-forward="true" selection-start-line="20" selection-start-column="26" selection-end-line="20" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/controller/authentication/jwt.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="161">
-          <caret line="16" selection-start-line="16" selection-end-line="16" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/Users/Registration.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="154">
-          <caret line="13" column="41" selection-start-line="13" selection-start-column="23" selection-end-line="13" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/Users/users.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="146">
-          <caret line="104" column="18" selection-start-line="104" selection-start-column="18" selection-end-line="104" selection-end-column="18" />
->>>>>>> Stashed changes
-        </state>
-      </provider>
-    </entry>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/controller/authentication/oauth2.js</url>
+          <line>59</line>
+          <option name="timeStamp" value="165" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/routes/users/users.js</url>
+          <line>30</line>
+          <option name="timeStamp" value="168" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/controller/authentication/authentication.js</url>
+          <line>113</line>
+          <option name="timeStamp" value="173" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/node_modules/mongoose/lib/helpers/model/discriminator.js</url>
+          <line>19</line>
+          <option name="timeStamp" value="180" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/app.js</url>
+          <line>36</line>
+          <option name="timeStamp" value="205" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/app.js</url>
+          <line>42</line>
+          <option name="timeStamp" value="219" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/routes/users/users.js</url>
+          <line>234</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="224" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/routes/users/users.js</url>
+          <line>235</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="225" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

@@ -54,7 +54,7 @@ passport.use(new BearerStrategy(
                     return done(null, false, {message: 'Registration Not Finished'})
                 }
 
-                let info = {scope: '*'};
+                let info = {scope: 'read'};
                 done(null, user, info);
             });
         });
@@ -91,53 +91,14 @@ async function createGoogleUser(token) {
                      .then(async (user) => {
                          if (user === null) {
                              //If no user is found, we proceed in creating a new one.
-                             //TODO STUB: MODIFY WITH ONLY NEEDED THINGS
-                             user = new Mentee({
+                             user = new User({
                                  "email": profile.email,
                                  "password": "placeholder",
                                  "googleId": profile.sub,
                                  "name": profile.given_name,
                                  "surname": profile.family_name,
                                  "profilePicture": profile.picture,
-                                 "currentJob": new Work({
-                                     "institution": {
-                                         "name": "Google",
-                                         "pictureUrl": "https://education.uic.edu/wp-content/uploads/sites/137/2019/03/UIC-Logo.png"
-                                     },
-                                     "fromDate": "1",
-                                     "toDate": "1",
-                                     "workingRole": "Software Engineer",
-                                 }),
-                                 "educationList": [new Education({
-                                     "institution": {
-                                         "name": "UIC",
-                                         "pictureUrl": "https://education.uic.edu/wp-content/uploads/sites/137/2019/03/UIC-Logo.png"
-                                     },
-                                     "degreeLevel": "Ph.D",
-                                     "fieldOfStudy": "Computer Science",
-                                     "fromDate": "1",
-                                     "toDate": "1",
-                                     "workingRole": "Software Engineer",
-                                 })],
-                                 "experienceList": [new Work({
-                                     "institution": {
-                                         "name": "Googlerino",
-                                         "pictureUrl": "https://education.uic.edu/wp-content/uploads/sites/137/2019/03/UIC-Logo.png"
-                                     },
-                                     "fromDate": "1",
-                                     "toDate": "1",
-                                     "workingRole": "Software Engineer",
-                                 })],
-                                 "questionList": [
-                                     {
-                                         "question": "What are your favourite programming languages?",
-                                         "answer": "Java, Python, C++",
-                                     },
-                                     {
-                                         "question": "What are your favourite programming languages?",
-                                         "answer": "Java, Python, C++",
-                                     },
-                                 ]
+                                 "kind": "User",
                              });
                          } else {
                              //Otherwise, if we have found a profile, we update some basic information.

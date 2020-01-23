@@ -8,6 +8,12 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="@types/oauth2orize" level="application" />
+    <orderEntry type="library" name="@types/passport" level="application" />
+    <orderEntry type="library" name="@types/bcryptjs" level="application" />
+    <orderEntry type="library" name="@types/passport-http" level="application" />
+    <orderEntry type="library" name="@types/passport-google-oauth20" level="application" />
     <orderEntry type="library" name="@types/express" level="application" />
+    <orderEntry type="library" name="@types/socket.io" level="application" />
   </component>
 </module>

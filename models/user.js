@@ -1,26 +1,23 @@
 const mongoose = require('mongoose');
 require('mongoose-type-url');
 const validator = require('validator');
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const findOrCreate = require('mongoose-findorcreate');
 
 const mentor = require('./mentor');
 const mentee = require('./mentee');
 const enums = require('./enums');
-const contactOption = require('./contactOption');
+const contactOption = require('./questionForAcceptingRequest');
 const experience = require('./experience');
 
-//const Constants = require('./../../utilities/constants');
-var ObjectId = require('mongoose').Types.ObjectId;
+//const Constants = require('./../../api/constants');
+let ObjectId = require('mongoose').Types.ObjectId;
 
-/////////////// SECRET SALT ADDED TO THE JST TOKEN SIGNATURE //////////////
-//const secret = Constants.authenticationTokenSecret;
 
-var options = {discriminatorKey: 'kind'};
+let options = {discriminatorKey: 'kind'};
 
 // Defining the mongoose schema
-var UserSchema = new mongoose.Schema({
+let UserSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
@@ -28,7 +25,6 @@ var UserSchema = new mongoose.Schema({
         minlength: 1,
         unique: true,
         validate: {
-            // Returns either true (valid) or false (invalid)
             validator: validator.isEmail,
             message: '{VALUE} is not a valid email'
         }
@@ -52,18 +48,18 @@ var UserSchema = new mongoose.Schema({
 
     },
     location: {
-        type: String,
-        default: 'US'
+        type: String
     },
     googleId: {
-        type: String
+        type: String,
+        sparse: true,
     },
     bio: {
         type: String,
         min: 1,
         max: 1000,
         trim: true,
-        default: `Hi I'm excited to be here!`
+        default: `Hello. I'm excited to be here!`
     },
     pictureUrl: {
         type: mongoose.SchemaTypes.Url,
@@ -84,10 +80,8 @@ var UserSchema = new mongoose.Schema({
     twitter: {
         type: mongoose.SchemaTypes.Url
     },
-
     currentJob: {
-        type: experience.Work.schema,
-        required: true,
+        type: experience.Work.schema
     },
     educationList: {
         type: [experience.Education.schema]
@@ -95,31 +89,92 @@ var UserSchema = new mongoose.Schema({
     experienceList: {
         type: [experience.Work.schema]
     },
-    questionList: {
+    questions: {
         type: [enums.questionSchema]
     },
-    tagList: {
-        type: [enums.tagSchema]
+    workingSpecialization: {
+        type: [{
+            type: String,
+            enum: [
+                'Software Engineer',
+                'Full-Stack',
+                'Front-End',
+                'Back-End',
+                'Machine Learning',
+                'Python',
+                'C++',
+                'iOS',
+                'Android',
+                'Mobile Dev.'
+            ],
+        }]
     },
-    contactOpt:{
-        type: contactOption.contactOptionSchema
+    questionsForAcceptingRequest: {
+        type: [contactOption.questionsForAcceptingRequestSchema]
     }
 
     // notification
 }, options);
 
+UserSchema.options.toObject = {
+    transform: function(doc, ret) {
+        ret.pastExperiences = [
+            ...ret.educationList,
+            ...ret.experienceList
+        ];
+        delete ret.educationList;
+        delete ret.experienceList;
+        delete ret.password;
+
+        let socialAccountList = [
+            "twitter", "github", "facebook", "linkedin", "instagram"
+        ];
+
+        ret.socialAccounts = socialAccountList
+            .map((e) => {
+                if (ret[e] != null) {
+                    return {
+                        "type": e,
+                        "urlAccount": ret[e]
+                    }
+                }
+            })
+            .filter(e => e != null);
+        delete ret.twitter;
+        delete ret.github;
+        delete ret.linkedin;
+        delete ret.instagram;
+        delete ret.facebook;
+
+        return ret;
+    }
+};
+
+UserSchema.methods.validPassword = function (password) {
+    return bcrypt.compareSync(password, this.password);
+};
+
+UserSchema.method('minimalProfile', function () {
+    return {
+        "_id": this._id,
+        "name": this.name,
+        "surname": this.surname,
+        "pictureUrl": this.pictureUrl
+    }
+});
+
 //TODO: contact options.
 // https://stackoverflow.com/questions/675231/how-do-i-access-properties-of-a-javascript-object-if-i-dont-know-the-names
 
-UserSchema.statics.getToken = function (id){
-    return new Promise((resolve,reject)=>{
-        User.findOne({_id:id}, function(err,user){
-            if (user.kind === 'Mentor'){
+UserSchema.statics.getToken = function (id) {
+    return new Promise((resolve, reject) => {
+        User.findOne({_id: id}, function (err, user) {
+            if (user.kind === 'Mentor') {
                 resolve()
             }
-            if (user.kind === 'Mentee'){
-                if (user.tokens_wallet < 1){
-                    reject({"error":"NOT_ENOUGH_TOKENS"})
+            if (user.kind === 'Mentee') {
+                if (user.tokens_wallet < 1) {
+                    reject({"error": "NOT_ENOUGH_TOKENS"})
                 } else {
                     resolve()
                 }
@@ -128,18 +183,18 @@ UserSchema.statics.getToken = function (id){
     })
 };
 
-UserSchema.statics.decreaseToken = function (id){
-    return new Promise((resolve,reject)=>{
-        User.findOne({_id:id}, function(err,user){
-            if (user.kind === 'Mentor'){
+UserSchema.statics.decreaseToken = function (id) {
+    return new Promise((resolve, reject) => {
+        User.findOne({_id: id}, function (err, user) {
+            if (user.kind === 'Mentor') {
                 resolve()
             }
-            if (user.kind === 'Mentee'){
-                user.tokens_wallet = user.tokens_wallet -1;
+            if (user.kind === 'Mentee') {
+                user.tokens_wallet = user.tokens_wallet - 1;
                 user.save();
                 resolve()
             }
-            if(err){
+            if (err) {
                 reject(err)
             }
         });
@@ -147,186 +202,15 @@ UserSchema.statics.decreaseToken = function (id){
 };
 
 
-UserSchema.statics.getQuiz = function (id) {
-    return User.findOne({_id:id},{'contactOpt.question':1,'contactOpt.timeInMinutes':1});
-};
-
-UserSchema.statics.getContactInfo = function (id) {
-    return User.findOne({_id:id},{'contactOpt.kind':1,'contactOpt.timeInMinutes':1, name: 1, surname: 1,referralCompany: 1,profilePicture: 1,location:1,workingRole:1});
-};
-
-// Schema method to find an User starting from its token
-UserSchema.statics.exploreSection = function () {
-    return User.find({kind: 'Mentor'}, {email: 0, password: 0, pseudonym: 0, tokens: 0, cost_in_tokens: 0,contactOpt:0});
-};
-
-UserSchema.statics.getProfile = function (id) {
-    return User.findOne({_id: id}, {email: 0, password: 0, pseudonym: 0, tokens: 0, cost_in_tokens: 0,contactOpt:0});
-};
-
-UserSchema.statics.findByToken = function (token) {
-    var User = this;
-    var decoded;
-
-    // We need a try catch block because if token is not valid, jwt launches an error
-    try {
-        decoded = jwt.verify(token, secret);
-    } catch (err) {
-        return Promise.reject();
-    }
-    // Quering the DB and returning the user
-    return User.findOne({
-        _id: decoded._id,
-        'tokens.token': token,
-        'tokens.access': 'auth'
-    });
-};
-
-// Schema method to find an user using its email and password
-UserSchema.statics.checkEmailPassword = function (email, password) {
-    var User = this;
-    // Query db for that email
-    return User.findOne({email})
-               .then((user) => bcrypt.compare(password, user.password))
-};
-
-UserSchema.statics.findByCredentials =  (email, password) => {
-    return new Promise((resolve,reject)=>{
-        user = User.findOne({email:email },function(err,user){
-            if (user!==null){
-                bcrypt.compare(password, user.password,function(err,res){
-                    if (res)
-                        resolve(user)
-                    else if (!res)
-                        reject('Password does not match')
-                })
-            } else {
-                reject('User not present in db')
-            }
-        })
-    })
-}
-
-
-// Schema method to find a single user, given its id
-UserSchema.statics.findById = function (userId) {
-    return User.findOne({
-        _id: userId
-    }).then(function (foundUser) {
-        return new Promise(function (resolve, reject) {
-            if (!foundUser)
-                reject("User was not found by ID");
-            else
-                resolve(foundUser);
-        });
-    }).catch(function (err) {
-        return Promise.reject(err);
-    });
-};
-
-// Schema method to find a single user, given its id
-UserSchema.statics.findByIdCustom = function (userId) {
-    return User.find({
-        _id: userId
-    }).limit(1).then(function (foundUser) {
-        if (!foundUser)
-            return Promise.reject("User was not found by ID");
-        else
-            return Promise.resolve(foundUser);
-    }).catch(function (err) {
-        return Promise.reject(err);
-    });
-};
-
-// Schema method to find a list of users starting from their _id
-UserSchema.statics.findByIdSorted = function (idList) {
-    // Query Mongo for those ids
-    return User.find({
-        '_id': {$in: idList}
-    }).then(function (userList) {
-        // If no results were returned by Mongo
-        if (!userList)
-            return Promise.reject();
-        // Otherwise, return sorted result according to Elastic
-        return new Promise(function (resolve, reject) {
-            resultArray = [];
-            idList.forEach(function (id) {      // For each id returned by Elastic, find its corresponding into the Mongo result objects
-                userList.forEach(function (user) {
-                    if (user._doc._id == id)
-                        resultArray.push(user);
-                })
-            });
-            if (resultArray.length > 0)
-                resolve(resultArray);
-            else
-                reject();
-        });
-    });
-};
-
-
-// Schema method to update the number of tokens for a specific mentee
-mentee.menteeSchema.statics.updateTokensWallet = function (menteeId, numTokens) {
-    menteeId = menteeId.toString();
-    return Mentee.updateOne({_id: menteeId}, {
-        tokens_wallet: numTokens
-    }).then(function (user) {
-        return Promise.resolve(user);
-    }).catch(function (err) {
-        return Promise.reject(err);
-    })
-};
-
-// Method to set the name of the confirmed University for a Mentee
-mentee.menteeSchema.statics.setConfirmedUniversity = function (menteeId, confirmedUniName) {
-    menteeId = menteeId.toString();
-    return Mentee.updateOne({_id: menteeId}, {
-        confirmed_university: confirmedUniName
-    }).then(function (user) {
-        return Promise.resolve(user);
-    }).catch(function (err) {
-        return Promise.reject(err);
-    })
-};
-
-// Method to set the residency state for a user
-UserSchema.statics.setResidencyState = function (userId, residencyState) {
-    userId = userId.toString();
-    return User.updateOne({_id: userId}, {
-        location: residencyState
-    }).then(function (user) {
-        return Promise.resolve(user);
-    }).catch(function (err) {
-        return Promise.reject(err);
-    })
-};
-
-
-// Another method to remove a token
-UserSchema.methods.removeToken = function (token) {
-    var user = this;
-
-    // Update using the MongoDB $pull (remove) operator
-    return user.update({
-        $pull: {
-            tokens: {
-                token: token
-            }
-        }
-    });
-};
-
-// Run code before firing events (Middleware)!!!
+// If the password is updated, then we use bcrypt to hash it.
 UserSchema.pre('save', function (next) {
-    var user = this;
-
-    // Call this function when the password field is modified
+    let user = this;
     if (user.isModified('password')) {
         // Overwrite plain password with hashed password
         bcrypt.genSalt(10, function (error, salt) {
             bcrypt.hash(user.password, salt, function (error, hash) {
                 user.password = hash;
-                next(); // Move on and save()
+                next();
             });
         });
     } else {
@@ -335,147 +219,23 @@ UserSchema.pre('save', function (next) {
 });
 
 
-// Instance method to get the list of skills for the user
-UserSchema.methods.getSkills = function () {
-    var user = this;
-    // Return the list of skills for this user
-    return user.skillList;
-};
+UserSchema.pre('findOneAndUpdate', function (next) {
+    let user = this._update;
 
-
-// Instance method to add a Skill for a user
-UserSchema.methods.addSkill = function (skillName, yearsOfExperience) {
-    var user = this;
-    //First, check if the user already has this skill
-    var duplicated = false;
-    user.skillList.forEach(function (element) {
-        if (element.skillName === skillName)
-            duplicated = true;
-    });
-    if (duplicated === true)
-        return Promise.reject("This skill already exists for this user");
-    // Saving the new skill for the user
-    user.skillList = user.skillList.concat({skillName, yearsOfExperience});
-    // Save with promise
-    return user.save().then(function () {
-        return Promise.resolve(user.skillList);
-    }).catch(function (err) {
-        return Promise.reject(err);
-    });
-};
-
-// Instance method to delete a skill from a User
-UserSchema.method('removeSkill', function (skillName) {
-    var user = this;
-    // Check if this skill exists for this user
-    var found = false;
-    var counter = 0, index = 0;
-    user.skillList.forEach(function (element) {
-        if (element.skillName === skillName) {
-            found = true;
-            index = counter;
-        }
-        counter++;
-    });
-    if (found === false)
-        return Promise.reject("Cannot delete a skill that is not registered for this user");
-    // Delete the skill
-    user.skillList = user.skillList.filter(function (value, index, arr) {
-        return value.skillName !== skillName;
-    });
-    // Finally save the user
-    return user.save().then(function () {
-        return Promise.resolve(user.skillList);
-    }).catch(function (err) {
-        return Promise.reject(err);
-    });
+    // Call this function when the password field is modified
+    if (user.password !== undefined) {
+        // Overwrite plain password with hashed password
+        bcrypt.genSalt(10, function (error, salt) {
+            bcrypt.hash(user.password, salt, function (error, hash) {
+                user.password = hash;
+                next();
+            });
+        });
+    } else {
+        next();
+    }
 });
 
-// Instance method for generating an access Token
-UserSchema.methods.generateAuthToken = function () {
-    var user = this;
-    // Creating a new token
-    var access = 'auth';
-    var token = jwt.sign({_id: user._id.toHexString(), access}, secret);
-    // Saving the token
-    user.tokens = user.tokens.concat({access, token});
-    // Save with promise
-    return user.save().then(function () {
-        return Promise.resolve(token);
-    }).catch(function (err) {
-        return Promise.reject(err);
-    });
-};
-
-// Instance method for adding a new experience
-UserSchema.methods.addSchoolExperience = function (experience) {
-    var user = this;
-    // Saving the new experience for the user
-    user.experienceSchoolList = user.experienceSchoolList.concat(experience);
-    // Save with promise
-    return user.save().then(function () {
-        return Promise.resolve(user.experienceSchoolList);
-    }).catch(function (err) {
-        return Promise.reject(err);
-    });
-};
-
-// Instance method for removing an experience
-UserSchema.methods.removeSchoolExperience = function (experienceId) {
-    var user = this;
-    // Delete the experience
-    var found = false;
-    user.experienceSchoolList = user.experienceSchoolList.filter(function (value, index, arr) {
-        if (value._id == experienceId)
-            found = true;
-        return value._id != experienceId;
-    });
-    if (found === false)
-        return Promise.reject("Trying to remove a non-existent school experience");
-    // Save with promise
-    return user.save().then(function () {
-        return Promise.resolve(user.experienceSchoolList);
-    }).catch(function (err) {
-        return Promise.reject(err);
-    });
-};
-
-// Instance method for adding a new experience
-UserSchema.methods.addWorkExperience = function (experience) {
-    var user = this;
-    // Saving the new experience for the user
-    user.experienceWorkList = user.experienceWorkList.concat(experience);
-    // Save with promise
-    return user.save().then(function () {
-        return Promise.resolve(user.experienceWorkList);
-    }).catch(function (err) {
-        return Promise.reject(err);
-    });
-};
-
-// Instance method for removing an experience
-UserSchema.methods.removeWorkExperience = function (experienceId) {
-    var user = this;
-    // Delete the experience
-    var found = false;
-    user.experienceWorkList = user.experienceWorkList.filter(function (value, index, arr) {
-        if (value._id == experienceId)
-            found = true;
-        return value._id != experienceId;
-    });
-    if (found === false)
-        return Promise.reject("Trying to remove a non-existent work experience");
-    // Save with promise
-    return user.save().then(function () {
-        return Promise.resolve(user.experienceWorkList);
-    }).catch(function (err) {
-        return Promise.reject(err);
-    });
-};
-
-UserSchema.methods.validPassword = function (password) {
-    return bcrypt.compareSync(password, this.password);
-};
 
 // AccessToken
 let AccessTokenSchema = new mongoose.Schema({

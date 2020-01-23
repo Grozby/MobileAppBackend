@@ -5,8 +5,9 @@ let router = express.Router();
 const config = require('./configHandlers');
 const lodash = require('lodash');
 const errorParse = require('../../controller/error_parser');
-//
+let ObjectId = require('mongoose').Types.ObjectId;
 
+const {ContactMentor} = require("../../models/contact");
 const {User, Mentor, Mentee} = require('../../models/user.js');
 const {mongoose} = require('../../db/mongoose.js');
 mongoose.Promise = require('bluebird');
@@ -15,22 +16,6 @@ mongoose.Promise = require('bluebird');
 //  Registration
 //-------------------
 
-router.post("/signup_complete/mentor",
-    config.checkSignupMentor,
-    function (req, res) {
-        req.body = lodash.pick(req.body, ['email', 'password', 'name', 'surname', 'referralCompany', 'workingRole', 'state', 'experienceList', 'educationList',
-            'questionList', 'tagList', 'contactOpt'
-        ]);
-        let mentor = new Mentor(req.body);
-
-        mentor.save()
-              .then(() => { //if user not present in the Database, we add it
-                  return res.sendStatus(201);
-              })
-              .catch(error => { //Otherwise, we proceed in sending what went wrong.
-                  return res.status(400).json(errorParse.parseRegistrationError(error));
-              });
-    });
 
 router.post("/signup/mentor",
     config.checkSignupMentor,
@@ -63,337 +48,238 @@ router.post("/signup/mentee",
     }
 );
 
+router.post("/signup/decide",
+    config.checkSignupDecide,
+    async function (req, res) {
+        let kind = req.body.kind;
+
+        if (req.user.kind === "User" && ["Mentor", "Mentee"].includes(kind)) {
+            req.user.kind = kind;
+            await req.user.save();
+            return res.sendStatus(200);
+        }
+
+        return res.sendStatus(400);
+    }
+);
+
 //---------------------
 //  Profile Information
 //---------------------
 router.get("/minimalprofile",
     config.generalAuth,
     function (req, res) {
-        return res.json({
-            kind: req.user.kind,
-            name: req.user.email,
-            profilePicture: req.user.pictureUrl,
-        })
+        return res.status(200).json(req.user.minimalProfile());
     });
 
 router.get("/profile",
     config.generalAuth,
     function (req, res) {
-
-        let socialAccountList = [
-            "twitter", "github", "facebook", "linkedin", "instagram"
-        ];
-
-        return res.json({
-            kind: req.user.kind,
-            name: req.user.name,
-            surname: req.user.surname,
-            pictureUrl: req.user.pictureUrl,
-            location: req.user.location,
-            bio: req.user.bio,
-            currentJob: req.user.currentJob,
-            pastExperiences: [...req.user.educationList, ...req.user.experienceList],
-            questions: req.user.questionList,
-            tokenWallet: req.user.tokens_wallet,
-            socialAccounts: socialAccountList
-                .map((e) => {
-                    if (req.user[e] != null) {
-                        return {
-                            "type": e,
-                            "urlAccount": req.user[e]
-                        }
-                    }
-                })
-                .filter(e => e != null),
-        })
+        return res.json(req.user.toObject());
     });
 
 router.get("/profile/:id",
+    config.generalAuth,
     function (req, res) {
-        User.getProfile(req.params.id)
-            .then((profileResponse) => res.status(200).json(profileResponse))
+        User.findById(req.params.id)
+            .then((profileResponse) =>
+                res.status(200).json(profileResponse == null ? {} : profileResponse.toObject()))
             .catch((error) => res.status(400).json(error))
     });
+
+router.patch("/profile",
+    config.generalAuth,
+    async function (req, res) {
+        if (req.body.kind !== undefined ||
+            req.body.email !== undefined ||
+            req.body._id !== undefined) {
+            return res.sendStatus(400);
+        }
+
+        await User.findOneAndUpdate(
+            {email: req.user.email},
+            req.body,
+            {new: true, runValidators: true}
+        ).then(() => res.sendStatus(200)
+        ).catch((e) =>
+            res.sendStatus(400)
+        );
+    }
+);
 
 
 router.get("/explore",
     config.generalAuth,
-    function (req, res) {
-        User.exploreSection(req.user.id)
-            .then((exploreResponse) => res.status(201).json(exploreResponse))
-            .catch((error) => res.status(400).json(error))
+    async function (req, res) {
+        let results;
+
+        switch (req.user.kind) {
+            case "Mentee":
+                let contactedMentorsId = await ContactMentor.find({"menteeId": req.user._id})
+                                                            .then((list) => list.map((e) => ObjectId(e.mentorId)));
+                results = await Mentor.aggregate([
+                    {"$match": {"_id": {"$nin": contactedMentorsId}}},
+                    {$sample: {size: 7}}
+                ]);
+                break;
+            case "Mentor":
+                let contactedMenteesId = await ContactMentor.find({"mentorId": req.user._id})
+                                                            .then((list) => list.map((e) => ObjectId(e.menteeId)));
+                results = await Mentee.aggregate([
+                    {"$match": {"_id": {"$in": contactedMenteesId}}},
+                    {$sample: {size: 7}}
+                ]);
+                break;
+            default:
+                return res.sendStatus(400);
+        }
+
+        results.forEach(function (part, index) {
+            part.pastExperiences = [...part.educationList, ...part.experienceList];
+            delete part.educationList;
+            delete part.experienceList;
+            this[index] = part;
+        }, results);
+
+        return res.status(200).json(results);
     });
 
-//Stub call to check if everything is working with the network connectivity of the app.
-router.get("/explorestub",
-    [], function (req, res) {
-        let mentors = [
+
+router.post(
+    "/sendrequest/:mentorid",
+    config.generalAuth,
+    async function (req, res) {
+        if (req.body === undefined || req.body.answers === undefined || req.body.startingMessage === undefined) {
+            return res.status(400).json({"message": "No body."});
+        }
+
+        if (req.user.kind !== "Mentee") {
+            return res.status(400).json({"message": "A mentor cannot contact another mentor."});
+        }
+
+        let mentor = await User.findById(req.params.mentorid);
+        let contact = await ContactMentor.findOne({
+            "mentorId": req.params.mentorid,
+            "menteeId": req.user._id,
+        });
+
+        if (mentor == null) {
+            return res.status(400).json({"message": "No mentor"});
+        }
+
+        if (contact != null) {
+            return res.status(400).json({"message": "Already contacted."});
+        }
+
+
+        mentor = mentor.toObject();
+        let answers = [];
+        for (let i = 0; i < mentor.questionsForAcceptingRequest.length; i++) {
+
+            if (req.body.answers === undefined || req.body.answers[i] === undefined ||
+                (req.body.answers[i].textAnswer === undefined && req.body.answers[i].audioAnswer === undefined)) {
+                return res.status(400).json({"message": "No answers."});
+            }
+
+            answers.push(
                 {
-                    kind: "Mentor",
-                    name: "Bob",
-                    surname: "Ross",
-                    bio:
-                        "\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"",
-                    location: "Mountain View, US",
-                    company: "Google",
-                    pictureUrl:
-                        "https://images.csmonitor.com/csm/2015/06/913184_1_0610-larry_standard.jpg?alias=standard_900x600",
-                    currentJob: {
-                        kind: "Job",
-                        institution: {
-                            name: "Google",
-                            pictureUrl:
-                                "https://freeiconshop.com/wp-content/uploads/edd/google-flat.png",
-                        },
-                        workingRole: "Software Engineer",
-                        fromDate: "2019-03-01 00:00:00.000Z",
-                    },
-                    questions: [
-                        {
-                            question: "Favorite programming languages...",
-                            answer: "Java, Python, C++",
-                        },
-                        {
-                            question: "Dragoni volanti",
-                            answer: "E dove trovarli",
+                    "question": mentor.questionsForAcceptingRequest[i].question,
+                    "textAnswer": req.body.answers[i].textAnswer ? req.body.answers[i].textAnswer : "",
+                    "audioAnswer": req.body.answers[i].audioAnswer ? req.body.answers[i].audioAnswer : "",
+                }
+            );
+        }
+
+        let aq = ContactMentor({
+            "menteeId": req.user._id,
+            "mentorId": req.params.mentorid,
+            "startingMessage": req.body.startingMessage,
+            "answers": answers,
+        });
+        await aq.save();
+        return res.sendStatus(200);
+    });
+
+router.post(
+    "/deciderequest/:idrequest",
+    config.generalAuth,
+    async function(req, res) {
+        if(req.body === undefined){
+            return res.status(400).json({"message": "No body."});
+        }
+
+        if(!["accepted", "refused"].includes(req.body.status)){
+            return res.status(400).json({"message": "Incorrect status."});
+        }
+
+        if(req.user.kind === "Mentee"){
+            return res.status(400).json({"message": "What are you doing here?!"});
+        }
+
+        let request = await ContactMentor.findById(req.params.idrequest)
+                                         .catch(_ => null);
+
+        if(request == null){
+            return res.status(400).json({"message": "No request found."});
+        }
+
+        if(request.status !== "pending"){
+            return res.status(400).json({"message": "Can't change what's have been decided."});
+        }
+
+
+        if(!ObjectId(request.mentorId).equals(req.user.toObject()._id)){
+            return res.status(400).json({"message": "Can't decide other's fate."});
+        }
+
+        request.status = req.body.status;
+        await request.save();
+        return res.sendStatus(200);
+    });
+
+router.get("/contactrequest",
+    config.generalAuth,
+    async function (req, res) {
+        let results;
+        switch (req.user.kind) {
+            case "Mentee":
+                results = await ContactMentor
+                    .find({"menteeId": req.user._id})
+                    .then(async (list) => await Promise.all(list.map(async function (e) {
+                            e = e.toObject();
+                            e.mentor = await Mentor.findById(e.mentorId).then((e) => e.minimalProfile());
+                            delete e.mentorId;
+                            return e;
                         }
-                    ],
-                    pastExperiences:
-                        [
-                            {
-                                kind: "Job",
-                                institution: {
-                                    name: "Apple",
-                                    pictureUrl:
-                                        "https://i.pinimg.com/originals/1c/aa/03/1caa032c47f63d50902b9d34492e1303.jpg",
-                                },
-                                workingRole: "Software Engineer",
-                                fromDate: "2019-03-01 00:00:00.000Z",
-                                toDate: "2019-09-01 00:00:00.000Z",
-                            },
-                            {
-                                kind: "Education",
-                                institution: {
-                                    name: "Stanford University",
-                                    pictureUrl:
-                                        "https://identity.stanford.edu/img/block-s-2color.png",
-                                },
-                                degreeLevel: "Ph.D",
-                                fieldOfStudy: "Computer Science",
-                                fromDate: "2015-07-01 00:00:00.000Z",
-                                toDate: "2018-07-01 00:00:00.000Z",
-                            },
-                            {
-                                kind: "Education",
-                                institution: {
-                                    name: "Politecnico di Milano",
-                                    pictureUrl:
-                                        "https://identity.stanford.edu/img/block-s-2color.png",
-                                },
-                                degreeLevel: "Ph.D",
-                                fieldOfStudy: "Computer Science",
-                                fromDate: "2015-07-01 00:00:00.000Z",
-                                toDate: "2018-07-01 00:00:00.000Z",
-                            },
-                            {
-                                kind: "Education",
-                                institution: {
-                                    name: "Politecnico di Milano",
-                                    pictureUrl:
-                                        "https://identity.stanford.edu/img/block-s-2color.png",
-                                },
-                                degreeLevel: "Ph.D",
-                                fieldOfStudy: "Computer Science",
-                                fromDate: "2015-07-01 00:00:00.000Z",
-                                toDate: "2018-07-01 00:00:00.000Z",
-                            },
-                        ],
-                    socialAccounts: [],
-                    questionsForAcceptingRequest: [
-                        {
-                            question: "In Software Engineering,briefly explain what the patter Wrapper is used for?",
-                            availableTime: 120,
-                        },
-                        {
-                            question: "Ma sei megaminchia?",
-                            availableTime: 60,
+                    )));
+                break;
+            case "Mentor":
+                results = await ContactMentor
+                    .find({"mentorId": req.user._id})
+                    .then(async (list) => await Promise.all(list.map(async function (e) {
+                            e = e.toObject();
+                            e.mentee = await Mentee.findById(e.menteeId).then((e) => e.minimalProfile());
+                            delete e.menteeId;
+                            return e;
                         }
-                    ],
-                    workingSpecialization:
-                        ["Software Engineer", "Front End", "Backend"],
+                    )));
+                break;
+            default:
+                return res.sendStatus(400);
+        }
 
+        return res.status(200).json(results);
+    });
 
-                },
-                {
-                    kind: "Mentor",
-                    name: "Bobberino",
-                    surname: "Ross",
-                    bio:
-                        "\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"",
-                    location: "Mountain View, US",
-                    company: "Google",
-                    pictureUrl:
-                        "https://b.thumbs.redditmedia.com/7Zlnm0CUqYG2VIdqpc8QA08cvoINPKTvOZDL2kjfmsI.png",
-                    currentJob: {
-                        kind: "Job",
-                        institution: {
-                            name: "Google",
-                            pictureUrl:
-                                "https://freeiconshop.com/wp-content/uploads/edd/google-flat.png",
-                        },
-                        workingRole: "Software Engineer",
-                        fromDate: "2019-03-01 00:00:00.000Z",
-                    },
-                    questions: [
-                        {
-                            question: "Favorite programming languages...",
-                            answer: "Java, Python, C++",
-                        },
-                        {
-                            question: "Dragoni volanti",
-                            answer: "E dove trovarli",
-                        }
-                    ],
-                    pastExperiences:
-                        [
-                            {
-                                kind: "Job",
-                                institution: {
-                                    name: "Apple",
-                                    pictureUrl:
-                                        "https://i.pinimg.com/originals/1c/aa/03/1caa032c47f63d50902b9d34492e1303.jpg",
-                                },
-                                workingRole: "Software Engineer",
-                                fromDate: "2019-03-01 00:00:00.000Z",
-                                toDate: "2019-09-01 00:00:00.000Z",
-                            },
-                            {
-                                kind: "Education",
-                                institution: {
-                                    name: "Stanford University",
-                                    pictureUrl:
-                                        "https://identity.stanford.edu/img/block-s-2color.png",
-                                },
-                                degreeLevel: "Ph.D",
-                                fieldOfStudy: "Computer Science",
-                                fromDate: "2015-07-01 00:00:00.000Z",
-                                toDate: "2018-07-01 00:00:00.000Z",
-                            },
-                            {
-                                kind: "Education",
-                                institution: {
-                                    name: "Politecnico di Milano",
-                                    pictureUrl:
-                                        "https://identity.stanford.edu/img/block-s-2color.png",
-                                },
-                                degreeLevel: "Ph.D",
-                                fieldOfStudy: "Computer Science",
-                                fromDate: "2015-07-01 00:00:00.000Z",
-                                toDate: "2018-07-01 00:00:00.000Z",
-                            }
-                        ],
-                    socialAccounts: [],
-                    questionsForAcceptingRequest: [],
-                    workingSpecialization:
-                        ["Software Engineer"],
+router.get("/contactrequest/:idrequest",
+    config.generalAuth,
+    async function (req, res) {
+        let result = await ContactMentor.findById(req.params.idrequest)
+                                        .then(e => e.toObject())
+                                        .catch(e => null);
 
-
-                },
-                {
-                    kind: "Mentor",
-                    name: "Bob",
-                    surname: "Ross",
-                    bio:
-                        "\"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.\"",
-                    location: "Mountain View, US",
-                    company: "Google",
-                    pictureUrl:
-                        "https://images.csmonitor.com/csm/2015/06/913184_1_0610-larry_standard.jpg?alias=standard_900x600",
-                    currentJob: {
-                        kind: "Job",
-                        institution: {
-                            name: "Google",
-                            pictureUrl:
-                                "https://freeiconshop.com/wp-content/uploads/edd/google-flat.png",
-                        },
-                        workingRole: "Software Engineer",
-                        fromDate: "2019-03-01 00:00:00.000Z",
-                    },
-                    questions: [
-                        {
-                            question: "Favorite programming languages...",
-                            answer: "Java, Python, C++",
-                        },
-                        {
-                            question: "Dragoni volanti",
-                            answer: "E dove trovarli",
-                        }
-                    ],
-                    pastExperiences:
-                        [
-                            {
-                                kind: "Job",
-                                institution: {
-                                    name: "Apple",
-                                    pictureUrl:
-                                        "https://i.pinimg.com/originals/1c/aa/03/1caa032c47f63d50902b9d34492e1303.jpg",
-                                },
-                                workingRole: "Software Engineer",
-                                fromDate: "2019-03-01 00:00:00.000Z",
-                                toDate: "2019-09-01 00:00:00.000Z",
-                            },
-                            {
-                                kind: "Education",
-                                institution: {
-                                    name: "Stanford University",
-                                    pictureUrl:
-                                        "https://identity.stanford.edu/img/block-s-2color.png",
-                                },
-                                degreeLevel: "Ph.D",
-                                fieldOfStudy: "Computer Science",
-                                fromDate: "2015-07-01 00:00:00.000Z",
-                                toDate: "2018-07-01 00:00:00.000Z",
-                            },
-                            {
-                                kind: "Education",
-                                institution: {
-                                    name: "Politecnico di Milano",
-                                    pictureUrl:
-                                        "https://identity.stanford.edu/img/block-s-2color.png",
-                                },
-                                degreeLevel: "Ph.D",
-                                fieldOfStudy: "Computer Science",
-                                fromDate: "2015-07-01 00:00:00.000Z",
-                                toDate: "2018-07-01 00:00:00.000Z",
-                            },
-                            {
-                                kind: "Education",
-                                institution: {
-                                    name: "Politecnico di Milano",
-                                    pictureUrl:
-                                        "https://identity.stanford.edu/img/block-s-2color.png",
-                                },
-                                degreeLevel: "Ph.D",
-                                fieldOfStudy: "Computer Science",
-                                fromDate: "2015-07-01 00:00:00.000Z",
-                                toDate: "2018-07-01 00:00:00.000Z",
-                            },
-                        ],
-                    socialAccounts: [],
-                    questionsForAcceptingRequest: [],
-                    workingSpecialization:
-                        ["Software Engineer", "Front End", "Backend"],
-
-
-                },
-
-            ]
-        ;
-
-
-        res.status(200).json(mentors);
-    })
-;
+        return result !== null ? res.status(200).json(result) : res.sendStatus(400);
+    });
 
 module.exports = router;
 
