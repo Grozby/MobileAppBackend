@@ -2,11 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f7716513-44c7-454a-ae80-783893c39378" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/Mobile-Backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Mobile-Backend.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/chat/chat.js" beforeDir="false" afterPath="$PROJECT_DIR$/chat/chat.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/auth/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/auth/auth.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -160,7 +157,7 @@
       <workItem from="1579646131616" duration="1735000" />
       <workItem from="1579679055566" duration="20289000" />
       <workItem from="1579731658801" duration="5298000" />
-      <workItem from="1579769903238" duration="14832000" />
+      <workItem from="1579769903238" duration="21405000" />
     </task>
     <servers />
   </component>
@@ -215,7 +212,18 @@
           <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="225" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/chat/chat.js</url>
+          <line>30</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="246" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+    <watches-manager>
+      <configuration name="NodeJSConfigurationType">
+        <watch expression="socket" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

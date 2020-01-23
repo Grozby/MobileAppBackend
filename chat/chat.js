@@ -1,24 +1,40 @@
 'use strict';
 
 
+const {AccessToken} = require("../models/user");
+const {ContactMentor} = require("../models/contact");
+let ObjectId = require('mongoose').Types.ObjectId;
 
-module.exports = function(s){
+module.exports = function (s) {
     let io = require('socket.io')(s);
 
-    io.use(function(socket, next) {
-        var handshakeData = socket.request;
-        // make sure the handshake data looks good as before
-        // if error do this:
-        // next(new Error('not authorized'));
-        // else just call next
-        next();
+    io.use(async function (socket, next) {
+        let token = socket.request.headers.token;
+
+        await AccessToken.findOne({token: token})
+                         .then(result => result != null ? next() : next(new Error("Not authorized.")))
+                         .catch(_ => next(new Error("Not authorized.")));
     });
 
-    io.on('connection', function(socket) {
-        socket.on('new_room', async function(data) {
-            await AccessToken.findById(data.user.token)
+    io.on('connection', function (socket) {
+        socket.on('new_chat', async function (data) {
+            let contact = await ContactMentor.findById(data.chatId)
+                                             .catch(_ => null);
+            if (contact === null) {
+                return socket.emit("exception", "No contact with mentor selected mentor.");
+            }
+
+            let userId = await AccessToken.findOne({token: data.userToken}, 'userId', { lean: true })
+                                          .then(r => r.userId)
+                                          .catch(_ => null);
+
+            if (contact.mentorId !== userId && contact.menteeId !== userId) {
+                return socket.emit("exception", "What are you up to, stranger?");
+            }
+
+
             //data.userToken
-            socket.join(data.roomId);
+            socket.join(data.chatId);
 
             //TODO implement actual history
             let history = [
@@ -42,12 +58,12 @@ module.exports = function(s){
                 }
             ];
 
-            history.forEach(function(data) {
+            history.forEach(function (data) {
                 socket.emit('message', data);
             })
         });
 
-        socket.on('message', function(data) {
+        socket.on('message', function (data) {
             io.to(data.roomId).emit('message', {
                 kind: data.kind,
                 date: data.date,
