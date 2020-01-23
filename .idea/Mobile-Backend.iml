@@ -15,5 +15,7 @@
     <orderEntry type="library" name="@types/passport-google-oauth20" level="application" />
     <orderEntry type="library" name="@types/express" level="application" />
     <orderEntry type="library" name="@types/socket.io" level="application" />
+    <orderEntry type="library" name="socket.io.slim" level="application" />
+    <orderEntry type="library" name="jquery-1.10.2" level="application" />
   </component>
 </module>

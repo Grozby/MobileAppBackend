@@ -3,7 +3,6 @@
 let express = require('express');
 let router = express.Router();
 const config = require('./configHandlers');
-const authentication = require('../../controller/authentication/authentication');
 
 /**
  * --- Login ---

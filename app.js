@@ -9,6 +9,7 @@ const app = express();
 const fs = require('fs');
 const https = require('https');
 
+
 //Passport js
 app.use(passport.initialize());
 
@@ -54,6 +55,8 @@ let server = https.createServer(
     },
     app
 );
+
+const chat = require("./chat/chat")(server);
 
 server.listen(5001, function () {
     console.log("Listening on port " + 5001 + " ...");

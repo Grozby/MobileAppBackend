@@ -5,11 +5,8 @@
       <change beforePath="$PROJECT_DIR$/.idea/Mobile-Backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Mobile-Backend.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/contact.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/contact.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/contactOption.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/user.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/Users/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/Users/users.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/chat/chat.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/chat/chat.js" beforeDir="false" afterPath="$PROJECT_DIR$/chat/chat.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/auth/auth.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/auth/auth.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -163,7 +160,7 @@
       <workItem from="1579646131616" duration="1735000" />
       <workItem from="1579679055566" duration="20289000" />
       <workItem from="1579731658801" duration="5298000" />
-      <workItem from="1579769903238" duration="8131000" />
+      <workItem from="1579769903238" duration="14832000" />
     </task>
     <servers />
   </component>
@@ -205,16 +202,6 @@
           <url>file://$PROJECT_DIR$/node_modules/mongoose/lib/helpers/model/discriminator.js</url>
           <line>19</line>
           <option name="timeStamp" value="180" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/app.js</url>
-          <line>36</line>
-          <option name="timeStamp" value="205" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/app.js</url>
-          <line>42</line>
-          <option name="timeStamp" value="219" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/routes/users/users.js</url>
