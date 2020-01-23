@@ -2,12 +2,14 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f7716513-44c7-454a-ae80-783893c39378" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/Mobile-Backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Mobile-Backend.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/answer.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/contact.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/contact.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/contactOption.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/models/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/user.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/Users/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/Users/users.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server/chat_server.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/chat/chat.js" beforeDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -25,6 +27,12 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="JsFlowSettings">
+    <service-enabled>true</service-enabled>
+    <exe-path />
+    <other-services-enabled>true</other-services-enabled>
+    <auto-save>true</auto-save>
+  </component>
   <component name="ProjectId" id="1R69CoU7eHNmpqOo4Rsl3IX3icd" />
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
@@ -41,7 +49,7 @@
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="settings.editor.selected.configurable" value="JavaScript.Libraries" />
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2018.3.4\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
@@ -154,7 +162,8 @@
       <workItem from="1579595379114" duration="14949000" />
       <workItem from="1579646131616" duration="1735000" />
       <workItem from="1579679055566" duration="20289000" />
-      <workItem from="1579731658801" duration="4436000" />
+      <workItem from="1579731658801" duration="5298000" />
+      <workItem from="1579769903238" duration="8131000" />
     </task>
     <servers />
   </component>
@@ -206,6 +215,18 @@
           <url>file://$PROJECT_DIR$/app.js</url>
           <line>42</line>
           <option name="timeStamp" value="219" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/routes/users/users.js</url>
+          <line>234</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="224" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/routes/users/users.js</url>
+          <line>235</line>
+          <properties lambdaOrdinal="-1" />
+          <option name="timeStamp" value="225" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

@@ -18,7 +18,6 @@ const usersRouter = require('./routes/users/users');
 const authRouter = require('./routes/auth/auth');
 const contactRouter = require('./routes/contact/contact');
 const apiRouter = require('./routes/api/api');
-const chatRouter = require('./routes/chat/chat');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -31,7 +30,6 @@ app.use('/users', usersRouter);
 app.use('/auth', authRouter);
 app.use('/contact', contactRouter);
 app.use('/api', apiRouter);
-app.use('/chat', chatRouter);
 
 
 // catch 404 and forward to error handler
@@ -49,13 +47,15 @@ app.use(function (err, req, res, _next) {
 });
 
 
-https.createServer(
+let server = https.createServer(
     {
         key: fs.readFileSync('./config/server.key'),
         cert: fs.readFileSync('./config/server.crt')
     },
     app
-).listen(5001, function () {
+);
+
+server.listen(5001, function () {
     console.log("Listening on port " + 5001 + " ...");
 });
 
