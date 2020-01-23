@@ -200,6 +200,43 @@ router.post(
         return res.sendStatus(200);
     });
 
+router.post(
+    "/deciderequest/:idrequest",
+    config.generalAuth,
+    async function(req, res) {
+        if(req.body === undefined){
+            return res.status(400).json({"message": "No body."});
+        }
+
+        if(!["accepted", "refused"].includes(req.body.status)){
+            return res.status(400).json({"message": "Incorrect status."});
+        }
+
+        if(req.user.kind === "Mentee"){
+            return res.status(400).json({"message": "What are you doing here?!"});
+        }
+
+        let request = await ContactMentor.findById(req.params.idrequest)
+                                         .catch(_ => null);
+
+        if(request == null){
+            return res.status(400).json({"message": "No request found."});
+        }
+
+        if(request.status !== "pending"){
+            return res.status(400).json({"message": "Can't change what's have been decided."});
+        }
+
+
+        if(!ObjectId(request.mentorId).equals(req.user.toObject()._id)){
+            return res.status(400).json({"message": "Can't decide other's fate."});
+        }
+
+        request.status = req.body.status;
+        await request.save();
+        return res.sendStatus(200);
+    });
+
 router.get("/contactrequest",
     config.generalAuth,
     async function (req, res) {
