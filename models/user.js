@@ -7,7 +7,7 @@ const findOrCreate = require('mongoose-findorcreate');
 const mentor = require('./mentor');
 const mentee = require('./mentee');
 const enums = require('./enums');
-const contactOption = require('./contactOption');
+const contactOption = require('./questionForAcceptingRequest');
 const experience = require('./experience');
 
 //const Constants = require('./../../api/constants');

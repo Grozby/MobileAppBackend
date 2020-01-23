@@ -9,6 +9,7 @@ let answerQuestionSchema = new mongoose.Schema({
 }, {_id: false});
 
 let messageSchema = new mongoose.Schema({
+    user: {type: String},
     content: {
         type: String,
         required: true
