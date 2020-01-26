@@ -203,32 +203,32 @@ router.post(
 router.post(
     "/deciderequest/:idrequest",
     config.generalAuth,
-    async function(req, res) {
-        if(req.body === undefined){
+    async function (req, res) {
+        if (req.body === undefined) {
             return res.status(400).json({"message": "No body."});
         }
 
-        if(!["accepted", "refused"].includes(req.body.status)){
+        if (!["accepted", "refused"].includes(req.body.status)) {
             return res.status(400).json({"message": "Incorrect status."});
         }
 
-        if(req.user.kind === "Mentee"){
+        if (req.user.kind === "Mentee") {
             return res.status(400).json({"message": "What are you doing here?!"});
         }
 
         let request = await ContactMentor.findById(req.params.idrequest)
                                          .catch(_ => null);
 
-        if(request == null){
+        if (request == null) {
             return res.status(400).json({"message": "No request found."});
         }
 
-        if(request.status !== "pending"){
+        if (request.status !== "pending") {
             return res.status(400).json({"message": "Can't change what's have been decided."});
         }
 
 
-        if(!ObjectId(request.mentorId).equals(req.user.toObject()._id)){
+        if (!ObjectId(request.mentorId).equals(req.user.toObject()._id)) {
             return res.status(400).json({"message": "Can't decide other's fate."});
         }
 
@@ -247,8 +247,9 @@ router.get("/contactrequest",
                     .find({"menteeId": req.user._id})
                     .then(async (list) => await Promise.all(list.map(async function (e) {
                             e = e.toObject();
-                            e.mentor = await Mentor.findById(e.mentorId).then((e) => e.minimalProfile());
+                            e.user = await Mentor.findById(e.mentorId).then((e) => e.minimalProfile());
                             delete e.mentorId;
+                            e.messages = e.messages[0] === undefined ? [] : [e.messages[0]];
                             return e;
                         }
                     )));
@@ -258,8 +259,9 @@ router.get("/contactrequest",
                     .find({"mentorId": req.user._id})
                     .then(async (list) => await Promise.all(list.map(async function (e) {
                             e = e.toObject();
-                            e.mentee = await Mentee.findById(e.menteeId).then((e) => e.minimalProfile());
+                            e.user = await Mentee.findById(e.menteeId).then((e) => e.minimalProfile());
                             delete e.menteeId;
+                            e.messages = e.messages[0] === undefined ? [] : [e.messages[0]];
                             return e;
                         }
                     )));

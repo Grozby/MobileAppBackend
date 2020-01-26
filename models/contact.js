@@ -9,7 +9,7 @@ let answerQuestionSchema = new mongoose.Schema({
 }, {_id: false});
 
 let messageSchema = new mongoose.Schema({
-    user: {type: String},
+    userId: {type: String},
     content: {
         type: String,
         required: true
@@ -52,7 +52,6 @@ contactMentorSchema.methods.getMessages = function(param, cb) {
 
 contactMentorSchema.options.toObject = {
     transform: function(doc, ret) {
-        delete ret.createdAt;
         return ret;
     }
 };

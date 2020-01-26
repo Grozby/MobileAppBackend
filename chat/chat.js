@@ -16,42 +16,40 @@ module.exports = function (s) {
                          .catch(_ => next(new Error("Not authorized.")));
     });
 
-    io.on('connection', function (socket) {
-        socket.on('new_chat', async function (data) {
-            let contact = await ContactMentor.findById(data.chatId)
-                                             .catch(_ => null);
-            if (contact === null) {
-                return socket.emit("exception", "No contact with mentor selected mentor.");
-            }
 
-            let userId = await AccessToken.findOne({token: data.userToken}, 'userId', { lean: true })
-                                          .then(r => r.userId)
+    io.on('connection', async function (socket) {
+        console.log("Client connected");
+        let userId = await AccessToken.findOne({token: socket.handshake.headers.token})
+                                      .then(a => a.toObject().userId)
+                                      .catch(_ => null);
+        let contacts = await ContactMentor.find({$or:[{menteeId: userId}, {mentorId:userId}]})
                                           .catch(_ => null);
 
-            if (contact.mentorId !== userId && contact.menteeId !== userId) {
-                return socket.emit("exception", "What are you up to, stranger?");
-            }
+        if(contacts != null) {
+            contacts.forEach(function (c) {
+                c = c.toObject();
+                console.log("Joined room - ChatId: " + c._id.toString());
+                socket.join(c._id.toString());
+            })
+        }
 
-
-            //data.userToken
-            socket.join(data.chatId);
-
+        socket.on('new_chat', async function (data) {
             //TODO implement actual history
             let history = [
                 {
-                    user: "un id",
+                    userId: "un id",
                     kind: "text",
                     content: "Bella",
                     date: 1502343862000
                 },
                 {
-                    user: "un id",
+                    userId: "un id",
                     kind: "text",
                     content: "Come va boss?",
                     date: 1502171062000
                 },
                 {
-                    user: "un id",
+                    userId: "un id",
                     kind: "text",
                     content: "sup",
                     date: 1502261062000
@@ -64,7 +62,10 @@ module.exports = function (s) {
         });
 
         socket.on('message', function (data) {
-            io.to(data.roomId).emit('message', {
+            console.log("Message - Id: " + data.userId + " - ChatId: " + data.chatId);
+            io.to(data.chatId).emit('message', {
+                chatId: data.chatId,
+                userId: data.userId,
                 kind: data.kind,
                 date: data.date,
                 content: data.message,
@@ -72,16 +73,15 @@ module.exports = function (s) {
         });
 
         socket.on('typing', (data) => {
-            io.to(data.roomId).emit("typing", {
+            console.log("Typing - Id: " + data.userId + " - ChatId: " + data.chatId);
+            io.to(data.chatId).emit("typing", {
+                chatId: data.chatId,
                 userId: data.userId,
             });
         });
 
-        socket.on('stop typing', (data) => {
-            io.to(data.roomId).emit('stop typing', {
-                userId: data.userId,
-            });
+        socket.on('disconnect', function () {
+            console.log('Client disconnected.');
         });
-
     });
 };
