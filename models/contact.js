@@ -41,18 +41,19 @@ let contactMentorSchema = new mongoose.Schema(
             default: Date.now(),
         },
         answers: [answerQuestionSchema],
-        messages: [messageSchema]
+        messages: [messageSchema],
+        unreadMessages: {type: Number, default: 0}
     }
 );
 
 contactMentorSchema.index({menteeId: 1, mentorId: 1}, {unique: true});
 
-contactMentorSchema.methods.getMessages = function(param, cb) {
+contactMentorSchema.methods.getMessages = function (param, cb) {
     return this.messages;
 };
 
 contactMentorSchema.options.toObject = {
-    transform: function(doc, ret) {
+    transform: function (doc, ret) {
         return ret;
     }
 };

@@ -7,6 +7,8 @@ $(function () {
         '#3b88eb', '#3824aa', '#a700ff', '#d300e7'
     ];
 
+    var chattonaId = "5e2f14b3e731001a20ddf2ab";
+
     // Initialize variables
     var $window = $(window);
     var $usernameInput = $('.usernameInput'); // Input for username
@@ -40,15 +42,13 @@ $(function () {
 
     $joinChat.click(() => {
         socket.emit('new_chat', {
-            chatId: "5e28d2d2715a4352708b4712",
-            userId: "5e25a28b249f1c04fc51a07d",
+            chatId: chattonaId,
         });
     });
 
     $leaveChat.click(() => {
         socket.emit('leave_chat', {
-            chatId: "5e28d2d2715a4352708b4712",
-            userId: "5e25a28b249f1c04fc51a07d",
+            chatId: chattonaId,
         });
     });
 
@@ -92,10 +92,9 @@ $(function () {
             });
             // tell server to execute 'new message' and send along one parameter
             socket.emit('message', {
-                chatId: "5e28d2d2715a4352708b4712",
-                userId: "5e25a28b249f1c04fc51a07d",
+                chatId: chattonaId,
                 kind: "text",
-              createdAt: new Date().toISOString(),
+                createdAt: new Date().toISOString(),
                 content: message,
             });
         }
@@ -188,8 +187,7 @@ $(function () {
         if (!typing) {
             typing = true;
             socket.emit('typing', {
-                chatId: "5e28d2d2715a4352708b4712",
-                userId: "5e25a28b249f1c04fc51a07d"
+                chatId: chattonaId,
             });
         }
         lastTypingTime = (new Date()).getTime();
@@ -199,8 +197,7 @@ $(function () {
             var timeDiff = typingTimer - lastTypingTime;
             if (timeDiff >= TYPING_TIMER_LENGTH && typing) {
                 socket.emit('stop typing', {
-                    chatId: "5e28d2d2715a4352708b4712",
-                    userId: "5e25a28b249f1c04fc51a07d"
+                    chatId: chattonaId,
                 });
                 typing = false;
             }
@@ -247,9 +244,9 @@ $(function () {
     });
 
     $inputMessage.keydown((event) => {
-      if (event.which !== 13) {
-        updateTyping();
-      }
+        if (event.which !== 13) {
+            updateTyping();
+        }
     });
 
     // Click events
