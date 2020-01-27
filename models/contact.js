@@ -10,6 +10,7 @@ let answerQuestionSchema = new mongoose.Schema({
 
 let messageSchema = new mongoose.Schema({
     userId: {type: String},
+    isRead: {type: Boolean},
     content: {
         type: String,
         required: true
