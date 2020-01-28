@@ -15,14 +15,14 @@ class Chat {
 
     updatedContactRequest(chat, status) {
         if (status === 'accepted') {
-            if(this.activeSockets.has(chat.mentorId)){
+            if (this.activeSockets.has(chat.mentorId)) {
                 let ac = this.activeSockets.get(chat.mentorId);
                 ac.socket.join(chat._id.toString());
                 ac.contacts.push(chat);
                 this.activeSockets.set(chat.mentorId, ac);
             }
 
-            if(this.activeSockets.has(chat.menteeId)){
+            if (this.activeSockets.has(chat.menteeId)) {
                 let ac = this.activeSockets.get(chat.menteeId);
                 ac.socket.join(chat._id.toString());
                 ac.contacts.push(chat);
@@ -74,11 +74,27 @@ class Chat {
             }
 
             socket.on('new_chat', async (data) => {
-                if (this.activeSockets.get(userId).contacts.filter(function (c) {
-                    return c._id.toString() === data.chatId && c.status === 'accepted';
-                }).length === 0) {
+                let contactIndex = this.activeSockets
+                    .get(userId)
+                    .contacts
+                    .findIndex((c => c._id.toString() === data.chatId && c.status === 'accepted'));
+
+                let v = this.activeSockets.get(userId);
+                if (contactIndex < 0 || v.contacts[contactIndex].length === 0) {
                     return;
                 }
+
+                let i = v.contacts[contactIndex].messages.length - 1;
+                while(v.contacts[contactIndex].unreadMessages > 0){
+                    if(!v.contacts[contactIndex].messages[i].isRead && v.contacts[contactIndex].messages[i].userId !== userId){
+                        v.contacts[contactIndex].messages[i].isRead = true;
+                        v.contacts[contactIndex].unreadMessages -= 1;
+                        i -= 1;
+                    }
+                }
+                await v.contacts[contactIndex].save();
+                this.activeSockets.set(userId, v);
+
 
                 if (!this.activeChats.has(data.chatId)) {
                     this.activeChats.set(data.chatId, {
@@ -94,11 +110,7 @@ class Chat {
                     });
                     console.log("Joined active listen room - ChatId: " + data.chatId + " - Two active");
                 }
-                // //TODO implement actual history
 
-                // history.forEach(function (data) {
-                //     socket.emit('message', data);
-                // })
             });
 
             socket.on('leave_chat', async (data) => {
@@ -122,9 +134,16 @@ class Chat {
                 if (!this.activeChats.has(data.chatId)) {
                     return;
                 }
+                let contactIndex = this.activeSockets
+                                       .get(userId)
+                                       .contacts
+                                       .findIndex((c => c._id.toString() === data.chatId));
 
-                let contact = await ContactMentor.findById(data.chatId)
-                                                 .catch(_ => null);
+                let v = this.activeSockets.get(userId);
+                if (contactIndex < 0) {
+                    return;
+                }
+
                 let messageJson = {
                     chatId: data.chatId,
                     userId: userId,
@@ -134,11 +153,11 @@ class Chat {
                     content: data.content,
                 };
 
-                if (contact != null) {
-                    contact.messages.splice(0, 0, messageJson);
-                    contact.unreadMessages += 1;
-                    await contact.save();
-                    console.log();
+                if (v.contacts[contactIndex] != null) {
+                    v.contacts[contactIndex].messages.splice(0, 0, messageJson);
+                    v.contacts[contactIndex].unreadMessages += this.activeChats.get(data.chatId).activeUsers.length === 2 ? 0 : 1;
+                    await v.contacts[contactIndex].save();
+                    this.activeSockets.set(userId, v);
 
                     this.io.to(data.chatId).emit('message', messageJson);
                     console.log("Message - Id: " + userId + " - ChatId: " + data.chatId);

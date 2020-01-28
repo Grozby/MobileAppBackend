@@ -69,6 +69,11 @@ class Router {
 //---------------------
 //  Profile Information
 //---------------------
+        this.router.get("/userid",
+            config.generalAuth,
+            function (req, res) {
+                return res.status(200).json({id: req.user.id});
+            });
         this.router.get("/minimalprofile",
             config.generalAuth,
             function (req, res) {
@@ -285,8 +290,18 @@ class Router {
                 let result = await ContactMentor.findById(req.params.idrequest)
                                                 .then(e => e.toObject())
                                                 .catch(e => null);
+                if (result === null) {
+                    return res.sendStatus(400);
+                }
 
-                return result !== null ? res.status(200).json(result) : res.sendStatus(400);
+                if (req.user.kind === "Mentor") {
+                    result.user = await Mentee.findById(result.menteeId).then((e) => e.minimalProfile());
+                    delete result.menteeId;
+                } else {
+                    result.user = await Mentor.findById(result.mentorId).then((e) => e.minimalProfile());
+                    delete result.mentorId;
+                }
+                return res.status(200).json(result);
             });
     }
 }
