@@ -2,7 +2,6 @@ let mongoose = require('mongoose');
 const {Mentor} = require("../models/user");
 
 
-mongoose.set('debug', true);
 mongoose.set('useFindAndModify', false);
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost:27017/mobileapp', {

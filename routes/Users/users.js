@@ -243,7 +243,7 @@ class Router {
                 request.status = req.body.status;
                 await request.save();
 
-                chat.updatedContactRequest(request, request.status);
+                chat.updatedContactRequest(request);
 
                 return res.sendStatus(200);
             });

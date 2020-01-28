@@ -3,7 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="f7716513-44c7-454a-ae80-783893c39378" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/chat/chat.js" beforeDir="false" afterPath="$PROJECT_DIR$/chat/chat.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db/mongoose.js" beforeDir="false" afterPath="$PROJECT_DIR$/db/mongoose.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/main.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -165,6 +167,7 @@
       <workItem from="1580115985615" duration="17561000" />
       <workItem from="1580141212819" duration="7530000" />
       <workItem from="1580157340851" duration="10785000" />
+      <workItem from="1580205819911" duration="6373000" />
     </task>
     <servers />
   </component>
@@ -204,28 +207,11 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/chat/chat.js</url>
-          <line>104</line>
+          <line>158</line>
           <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="193" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/chat/chat.js</url>
-          <line>99</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="194" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/chat/chat.js</url>
-          <line>98</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="195" />
+          <option name="timeStamp" value="207" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
-    <watches-manager>
-      <configuration name="NodeJSConfigurationType">
-        <watch expression="socket" />
-      </configuration>
-    </watches-manager>
   </component>
 </project>

@@ -13,25 +13,33 @@ class Chat {
                                 .catch(_ => null);
     }
 
-    updatedContactRequest(chat, status) {
-        if (status === 'accepted') {
-            if (this.activeSockets.has(chat.mentorId)) {
-                let ac = this.activeSockets.get(chat.mentorId);
-                ac.socket.join(chat._id.toString());
-                ac.contacts.push(chat);
-                this.activeSockets.set(chat.mentorId, ac);
+    async updatedContactRequest(contact, status) {
+        if (contact.status === 'accepted') {
+
+            if (this.activeChats.has(contact._id.toString())) {
+                let chatData = this.activeChats.get(contact._id.toString());
+                chatData.contactDoc.status = 'accepted';
+                await chatData.contactDoc.save();
+                this.activeChats.set(contact._id.toString(), {
+                    activeUsers: chatData.activeUsers,
+                    contactDoc: chatData.contactDoc,
+                })
             }
 
-            if (this.activeSockets.has(chat.menteeId)) {
-                let ac = this.activeSockets.get(chat.menteeId);
-                ac.socket.join(chat._id.toString());
-                ac.contacts.push(chat);
-                this.activeSockets.set(chat.menteeId, ac);
+
+            if (this.activeSockets.has(contact.mentorId)) {
+                let socket = this.activeSockets.get(contact.mentorId);
+                socket.join(contact._id.toString());
             }
 
-            this.io.to(chat._id.toString()).emit('updated_contact_request', {
-                'chatId': chat._id.toString(),
-                'status': status,
+            if (this.activeSockets.has(contact.menteeId)) {
+                let ac = this.activeSockets.get(contact.menteeId);
+                ac.socket.join(contact._id.toString());
+            }
+
+            this.io.to(contact._id.toString()).emit('updated_contact_request', {
+                'chatId': contact._id.toString(),
+                'status': contact.status,
             })
         }
     }
@@ -58,75 +66,93 @@ class Chat {
             let contacts = await ContactMentor.find({$or: [{menteeId: userId}, {mentorId: userId}]})
                                               .catch(_ => null);
 
-            this.activeSockets.set(userId, {
-                socket: socket,
-                contacts: contacts != null ? contacts : [],
-            });
+
+            this.activeSockets.set(userId, socket);
 
             if (contacts != null) {
-                contacts.forEach(function (c) {
-                    c = c.toObject();
+                contacts.forEach((c) => {
                     if (c.status === 'accepted') {
                         socket.join(c._id.toString());
-                        console.log("Joined room - ChatId: " + c._id.toString());
+                        if(!this.activeChats.has(c._id.toString())){
+                            this.activeChats.set(c._id.toString(), {
+                                activeUsers: [],
+                                contactDoc: c,
+                            });
+                        }
+
+                        console.log("Joined room - ChatId: " + c._id.toString() + " - User: " + userId);
                     }
                 })
             }
 
             socket.on('new_chat', async (data) => {
-                let contactIndex = this.activeSockets
-                    .get(userId)
-                    .contacts
-                    .findIndex((c => c._id.toString() === data.chatId && c.status === 'accepted'));
-
-                let v = this.activeSockets.get(userId);
-                if (contactIndex < 0 || v.contacts[contactIndex].length === 0) {
+                if (!this.activeChats.has(data.chatId)) {
                     return;
                 }
 
-                let i = v.contacts[contactIndex].messages.length - 1;
-                while(v.contacts[contactIndex].unreadMessages > 0){
-                    if(!v.contacts[contactIndex].messages[i].isRead && v.contacts[contactIndex].messages[i].userId !== userId){
-                        v.contacts[contactIndex].messages[i].isRead = true;
-                        v.contacts[contactIndex].unreadMessages -= 1;
-                        i -= 1;
+                let chatData = this.activeChats.get(data.chatId);
+                let contact = chatData.contactDoc;
+
+                if(chatData.contactDoc.mentorId !== userId && chatData.contactDoc.menteeId !== userId){
+                    return;
+                }
+
+                if (chatData.activeUsers.includes(userId)) {
+                    return;
+                }
+
+                let i = 0;
+                while (contact.unreadMessages > 0) {
+                    if (!contact.messages[i].isRead && contact.messages[i].userId !== userId) {
+                        contact.messages[i].isRead = true;
+                        contact.unreadMessages -= 1;
+                        i += 1;
                     }
                 }
-                await v.contacts[contactIndex].save();
-                this.activeSockets.set(userId, v);
 
+                await contact.save();
+                chatData.activeUsers.push(userId);
 
-                if (!this.activeChats.has(data.chatId)) {
-                    this.activeChats.set(data.chatId, {
-                        activeUsers: [userId],
-                    });
+                this.activeChats.set(data.chatId, {
+                    activeUsers: chatData.activeUsers,
+                    contactDoc: contact,
+                });
+
+                if (chatData.activeUsers.length === 1) {
                     console.log("Joined active listen room - ChatId: " + data.chatId + " - One active");
-                } else if (!this.activeChats.get(data.chatId).activeUsers.includes(userId)) {
-                    let users = this.activeChats.get(data.chatId).activeUsers;
-                    users.push(userId);
-
-                    this.activeChats.set(data.chatId, {
-                        activeUsers: users,
-                    });
+                } else {
                     console.log("Joined active listen room - ChatId: " + data.chatId + " - Two active");
                 }
-
             });
 
             socket.on('leave_chat', async (data) => {
-                if (this.activeChats.has(data.chatId) && this.activeChats.get(data.chatId).activeUsers.includes(userId)) {
+                if (!this.activeChats.has(data.chatId)) {
+                    return;
+                }
 
-                    if (this.activeChats.get(data.chatId).activeUsers.length === 1) {
-                        this.activeChats.delete(data.chatId);
-                        console.log("Exited active listen room a - ChatId: " + data.chatId);
-                    } else {
-                        this.activeChats.set(data.chatId, {
-                            activeUsers: this.activeChats.get(data.chatId).activeUsers.filter(function (id, _1, _2) {
-                                return id !== userId;
-                            })
-                        });
-                        console.log("Exited active listen room - ChatId: " + data.chatId + " - One active");
-                    }
+                let chatData = this.activeChats.get(data.chatId);
+
+                if(chatData.contactDoc.mentorId !== userId && chatData.contactDoc.menteeId !== userId){
+                    return;
+                }
+
+                if (!chatData.activeUsers.includes(userId)) {
+                    return;
+                }
+
+                chatData.activeUsers = chatData.activeUsers.filter(function (id) {
+                    return id !== userId;
+                });
+
+                this.activeChats.set(data.chatId, {
+                    activeUsers: chatData.activeUsers,
+                    contactDoc: chatData.contactDoc,
+                });
+
+                if (chatData.activeUsers.length === 0) {
+                    console.log("Exited active listen room a - ChatId: " + data.chatId);
+                } else {
+                    console.log("Exited active listen room - ChatId: " + data.chatId + " - One active");
                 }
             });
 
@@ -134,40 +160,42 @@ class Chat {
                 if (!this.activeChats.has(data.chatId)) {
                     return;
                 }
-                let contactIndex = this.activeSockets
-                                       .get(userId)
-                                       .contacts
-                                       .findIndex((c => c._id.toString() === data.chatId));
+                let chatData = this.activeChats.get(data.chatId);
 
-                let v = this.activeSockets.get(userId);
-                if (contactIndex < 0) {
+                if(chatData.contactDoc.mentorId !== userId && chatData.contactDoc.menteeId !== userId){
+                    return;
+                }
+                if (!chatData.activeUsers.includes(userId)) {
                     return;
                 }
 
                 let messageJson = {
                     chatId: data.chatId,
                     userId: userId,
-                    isRead: this.activeChats.get(data.chatId).activeUsers.length === 2,
+                    isRead: chatData.activeUsers.length === 2,
                     kind: data.kind,
                     createdAt: data.createdAt,
                     content: data.content,
                 };
 
-                if (v.contacts[contactIndex] != null) {
-                    v.contacts[contactIndex].messages.splice(0, 0, messageJson);
-                    v.contacts[contactIndex].unreadMessages += this.activeChats.get(data.chatId).activeUsers.length === 2 ? 0 : 1;
-                    await v.contacts[contactIndex].save();
-                    this.activeSockets.set(userId, v);
+                chatData.contactDoc.messages.splice(0, 0, messageJson);
+                chatData.contactDoc.unreadMessages += chatData.activeUsers.length === 2 ? 0 : 1;
+                await chatData.contactDoc.save();
 
-                    this.io.to(data.chatId).emit('message', messageJson);
-                    console.log("Message - Id: " + userId + " - ChatId: " + data.chatId);
-                }
-
-
+                this.io.to(data.chatId).emit('message', messageJson);
+                console.log("Message - Id: " + userId + " - ChatId: " + data.chatId);
             });
 
             socket.on('typing', async (data) => {
                 if (!this.activeChats.has(data.chatId)) {
+                    return;
+                }
+                let chatData = this.activeChats.get(data.chatId);
+
+                if(chatData.contactDoc.mentorId !== userId && chatData.contactDoc.menteeId !== userId){
+                    return;
+                }
+                if (!chatData.activeUsers.includes(userId)) {
                     return;
                 }
 

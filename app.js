@@ -24,10 +24,6 @@ let server = https.createServer(
 
 const chat = require("./chat/chat").chat(server);
 
-server.listen(5001, function () {
-    console.log("Listening on port " + 5001 + " ...");
-});
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
@@ -64,5 +60,8 @@ app.use(function (err, req, res, _next) {
     return res.sendStatus(err.status || 404);
 });
 
+server.listen(5001, function () {
+    console.log("Listening on port " + 5001 + " ...");
+});
 
-module.exports = {app, chat};
+module.exports = {app};
