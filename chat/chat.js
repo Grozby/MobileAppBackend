@@ -85,6 +85,8 @@ class Chat {
                 })
             }
 
+            socket.emit('had_active_chad', {});
+
             socket.on('new_chat', async (data) => {
                 if (!this.activeChats.has(data.chatId)) {
                     return;
