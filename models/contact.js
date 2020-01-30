@@ -42,7 +42,6 @@ let contactMentorSchema = new mongoose.Schema(
         },
         answers: [answerQuestionSchema],
         messages: [messageSchema],
-        unreadMessages: {type: Number, default: 0}
     }
 );
 

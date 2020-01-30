@@ -85,7 +85,7 @@ class Chat {
                 })
             }
 
-            socket.emit('had_active_chad', {});
+            socket.emit('had_active_chat', {});
 
             socket.on('new_chat', async (data) => {
                 if (!this.activeChats.has(data.chatId)) {
@@ -104,12 +104,9 @@ class Chat {
                 }
 
                 let i = 0;
-                while (contact.unreadMessages > 0) {
-                    if (!contact.messages[i].isRead && contact.messages[i].userId !== userId) {
-                        contact.messages[i].isRead = true;
-                        contact.unreadMessages -= 1;
-                        i += 1;
-                    }
+                while (!contact.messages[i].isRead && contact.messages[i].userId !== userId) {
+                    contact.messages[i].isRead = true;
+                    i += 1;
                 }
 
                 await contact.save();
@@ -181,7 +178,6 @@ class Chat {
                 };
 
                 chatData.contactDoc.messages.splice(0, 0, messageJson);
-                chatData.contactDoc.unreadMessages += chatData.activeUsers.length === 2 ? 0 : 1;
                 await chatData.contactDoc.save();
 
                 this.io.to(data.chatId).emit('message', messageJson);
