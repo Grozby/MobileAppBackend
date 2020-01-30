@@ -4,7 +4,7 @@
     <list default="true" id="f7716513-44c7-454a-ae80-783893c39378" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/chat/chat.js" beforeDir="false" afterPath="$PROJECT_DIR$/chat/chat.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/contact.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/contact.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/Users/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/Users/users.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -168,7 +168,10 @@
       <workItem from="1580205819911" duration="6373000" />
       <workItem from="1580241666533" duration="2787000" />
       <workItem from="1580285849300" duration="3245000" />
-      <workItem from="1580330818018" duration="2699000" />
+      <workItem from="1580330818018" duration="3510000" />
+      <workItem from="1580375523547" duration="6897000" />
+      <workItem from="1580387817941" duration="44000" />
+      <workItem from="1580387889643" duration="402000" />
     </task>
     <servers />
   </component>
@@ -205,18 +208,6 @@
           <url>file://$PROJECT_DIR$/node_modules/mongoose/lib/helpers/model/discriminator.js</url>
           <line>19</line>
           <option name="timeStamp" value="180" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/chat/chat.js</url>
-          <line>107</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="182" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/chat/chat.js</url>
-          <line>108</line>
-          <properties lambdaOrdinal="-1" />
-          <option name="timeStamp" value="183" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

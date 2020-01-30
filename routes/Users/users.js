@@ -260,7 +260,9 @@ class Router {
                                     e = e.toObject();
                                     e.user = await Mentor.findById(e.mentorId).then((e) => e.minimalProfile());
                                     delete e.mentorId;
-                                    e.messages = e.messages[0] === undefined ? [] : [e.messages[0]];
+                                    e.messages = e.messages[0] === undefined
+                                        ? []
+                                        : e.messages.filter(m => m.userId !== req.user._id && !m.isRead);
                                     return e;
                                 }
                             )));
@@ -272,7 +274,9 @@ class Router {
                                     e = e.toObject();
                                     e.user = await Mentee.findById(e.menteeId).then((e) => e.minimalProfile());
                                     delete e.menteeId;
-                                    e.messages = e.messages[0] === undefined ? [] : [e.messages[0]];
+                                    e.messages = e.messages[0] === undefined
+                                        ? []
+                                        : e.messages.filter(m => m.userId !== req.user._id && !m.isRead);
                                     return e;
                                 }
                             )));

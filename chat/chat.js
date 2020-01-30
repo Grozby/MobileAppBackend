@@ -73,7 +73,11 @@ class Chat {
                 contacts.forEach((c) => {
                     if (c.status === 'accepted') {
                         socket.join(c._id.toString());
-                        if(!this.activeChats.has(c._id.toString())){
+                        this.io.to(c._id.toString()).emit('online', {
+                            chatId: c._id.toString(),
+                            userId: userId,
+                        });
+                        if (!this.activeChats.has(c._id.toString())) {
                             this.activeChats.set(c._id.toString(), {
                                 activeUsers: [],
                                 contactDoc: c,
@@ -93,9 +97,8 @@ class Chat {
                 }
 
                 let chatData = this.activeChats.get(data.chatId);
-                let contact = chatData.contactDoc;
 
-                if(chatData.contactDoc.mentorId !== userId && chatData.contactDoc.menteeId !== userId){
+                if (chatData.contactDoc.mentorId !== userId && chatData.contactDoc.menteeId !== userId) {
                     return;
                 }
 
@@ -104,18 +107,15 @@ class Chat {
                 }
 
                 let i = 0;
-                while (!contact.messages[i].isRead && contact.messages[i].userId !== userId) {
-                    contact.messages[i].isRead = true;
+                while (!chatData.contactDoc.messages[i].isRead && chatData.contactDoc.messages[i].userId !== userId) {
+                    chatData.contactDoc.messages[i].isRead = true;
                     i += 1;
                 }
 
-                await contact.save();
+                await chatData.contactDoc.save();
                 chatData.activeUsers.push(userId);
 
-                this.activeChats.set(data.chatId, {
-                    activeUsers: chatData.activeUsers,
-                    contactDoc: contact,
-                });
+                this.activeChats.set(data.chatId, chatData);
 
                 if (chatData.activeUsers.length === 1) {
                     console.log("Joined active listen room - ChatId: " + data.chatId + " - One active");
@@ -131,7 +131,7 @@ class Chat {
 
                 let chatData = this.activeChats.get(data.chatId);
 
-                if(chatData.contactDoc.mentorId !== userId && chatData.contactDoc.menteeId !== userId){
+                if (chatData.contactDoc.mentorId !== userId && chatData.contactDoc.menteeId !== userId) {
                     return;
                 }
 
@@ -161,7 +161,7 @@ class Chat {
                 }
                 let chatData = this.activeChats.get(data.chatId);
 
-                if(chatData.contactDoc.mentorId !== userId && chatData.contactDoc.menteeId !== userId){
+                if (chatData.contactDoc.mentorId !== userId && chatData.contactDoc.menteeId !== userId) {
                     return;
                 }
                 if (!chatData.activeUsers.includes(userId)) {
@@ -190,7 +190,7 @@ class Chat {
                 }
                 let chatData = this.activeChats.get(data.chatId);
 
-                if(chatData.contactDoc.mentorId !== userId && chatData.contactDoc.menteeId !== userId){
+                if (chatData.contactDoc.mentorId !== userId && chatData.contactDoc.menteeId !== userId) {
                     return;
                 }
                 if (!chatData.activeUsers.includes(userId)) {
@@ -206,6 +206,15 @@ class Chat {
 
             socket.on('disconnect', () => {
                 console.log('Client disconnected.');
+                if (contacts != null) {
+                    contacts.forEach(value => {
+                        this.io.emit('offline', {
+                            chatId: value._id.toString(),
+                            userId: userId,
+                        })
+                    });
+                }
+
                 this.activeSockets.delete(userId);
             });
         });
