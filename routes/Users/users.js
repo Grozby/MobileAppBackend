@@ -19,6 +19,22 @@ const baseDirectoryPath = require('../../app').directoryPath;
 //  Registration
 //-------------------
 
+function saveImage(imageData){
+    let isPng = imageData.substring(11, 15).includes("png");
+    let imagePath = 'assets/images/' + uuidv4() + (isPng ? ".png" : ".jpeg");
+    let replaceReg = isPng ? /^data:image\/png;base64,/ : /^data:image\/jpeg;base64,/;
+    let replaced = imageData.replace(replaceReg, "");
+    fs.writeFile(
+        path.join(__dirname, "../../public/", imagePath),
+        replaced,
+        'base64',
+        function (error) {
+            console.log(error);
+        });
+
+    return imagePath;
+}
+
 class Router {
     express = require('express');
     router = this.express.Router();
@@ -110,18 +126,7 @@ class Router {
 
                 //Case image data as passed as url
                 if (req.body.pictureUrl) {
-                    let isPng = req.body.pictureUrl.substring(11, 15).includes("png");
-                    let imagePath = 'assets/images/' + uuidv4() + (isPng ? ".png" : ".jpeg");
-                    let replaceReg = isPng ? /^data:image\/png;base64,/ : /^data:image\/jpeg;base64,/;
-                    let replaced = req.body.pictureUrl.replace(replaceReg, "");
-                    fs.writeFile(
-                        path.join(__dirname, "../../public/", imagePath),
-                        replaced,
-                        'base64',
-                        function (error) {
-                            console.log(error);
-                        });
-                    req.body.pictureUrl = imagePath;
+                    req.body.pictureUrl = saveImage(req.body.pictureUrl);
                 }
 
 
