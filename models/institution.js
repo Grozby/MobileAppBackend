@@ -6,8 +6,7 @@ const institutionSchema = new mongoose.Schema ({
         required: true
     },
     pictureUrl: {
-        type: mongoose.SchemaTypes.Url,
-        default: "https://ui-avatars.com/api/?background=0D8ABC&color=fff"
+        type: mongoose.SchemaTypes.String,
     },
 },  {_id : false});
 

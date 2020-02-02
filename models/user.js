@@ -62,7 +62,7 @@ let UserSchema = new mongoose.Schema({
         default: `Hello. I'm excited to be here!`
     },
     pictureUrl: {
-        type: mongoose.SchemaTypes.Url,
+        type: mongoose.SchemaTypes.String,
         default: "https://ui-avatars.com/api/?background=0D8ABC&color=fff"
     },
     linkedin: {

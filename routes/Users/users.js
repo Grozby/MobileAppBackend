@@ -19,7 +19,7 @@ const baseDirectoryPath = require('../../app').directoryPath;
 //  Registration
 //-------------------
 
-function saveImage(imageData){
+function saveImage(imageData) {
     let isPng = imageData.substring(11, 15).includes("png");
     let imagePath = 'assets/images/' + uuidv4() + (isPng ? ".png" : ".jpeg");
     let replaceReg = isPng ? /^data:image\/png;base64,/ : /^data:image\/jpeg;base64,/;
@@ -127,6 +127,32 @@ class Router {
                 //Case image data as passed as url
                 if (req.body.pictureUrl) {
                     req.body.pictureUrl = saveImage(req.body.pictureUrl);
+                }
+
+                if (req.body.currentJob !== undefined &&
+                    req.body.currentJob.institution !== undefined &&
+                    req.body.currentJob.institution.pictureUrl !== undefined) {
+                    req.body.currentJob.institution.pictureUrl = saveImage(req.body.currentJob.institution.pictureUrl);
+                }
+
+                if(req.body.experiences !== undefined){
+                    let experienceList = [];
+                    let educationList = [];
+                    req.body.experiences.forEach((e) =>{
+                        if(e.institution !== undefined &&
+                            e.institution.pictureUrl !== undefined){
+                            e.institution.pictureUrl = saveImage(e.institution.pictureUrl);
+                            if(e.kind === "Education") {
+                                educationList.push(e);
+                            } else {
+                                experienceList.push(e);
+                            }
+                        }
+                    });
+
+                    req.body.experienceList = experienceList;
+                    req.body.educationList = educationList;
+                    delete req.body.experiences;
                 }
 
 
