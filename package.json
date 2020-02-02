@@ -34,7 +34,9 @@
     "pug": "^2.0.4",
     "socket.io": "^2.3.0",
     "utf-8-validate": "^5.0.2",
-    "validator": "latest"
+    "uuid": "^3.4.0",
+    "validator": "latest",
+      "body-parser": "latest"
   },
   "devDependencies": {
     "googleapis": "^41.0.1",

@@ -1,6 +1,9 @@
 'use strict';
 
 
+const fs = require("fs");
+const path = require('path');
+const uuidv4 = require('uuid/v4');
 const config = require('./configHandlers');
 const lodash = require('lodash');
 const errorParse = require('../../controller/error_parser');
@@ -10,6 +13,7 @@ const {ContactMentor} = require("../../models/contact");
 const {User, Mentor, Mentee} = require('../../models/user.js');
 const {mongoose} = require('../../db/mongoose.js');
 mongoose.Promise = require('bluebird');
+const baseDirectoryPath = require('../../app').directoryPath;
 
 //-------------------
 //  Registration
@@ -104,14 +108,31 @@ class Router {
                     return res.sendStatus(400);
                 }
 
+                //Case image data as passed as url
+                if (req.body.pictureUrl) {
+                    let isPng = req.body.pictureUrl.substring(11, 15).includes("png");
+                    let imagePath = 'assets/images/' + uuidv4() + (isPng ? ".png" : ".jpeg");
+                    let replaceReg = isPng ? /^data:image\/png;base64,/ : /^data:image\/jpeg;base64,/;
+                    let replaced = req.body.pictureUrl.replace(replaceReg, "");
+                    fs.writeFile(
+                        path.join(__dirname, "../../public/", imagePath),
+                        replaced,
+                        'base64',
+                        function (error) {
+                            console.log(error);
+                        });
+                    req.body.pictureUrl = imagePath;
+                }
+
+
                 await User.findOneAndUpdate(
                     {email: req.user.email},
                     req.body,
-                    {new: true, runValidators: true}
-                ).then(() => res.sendStatus(200)
-                ).catch((e) =>
-                    res.sendStatus(400)
-                );
+                    {new: true, runValidators: true})
+                          .then(() => res.json(req.body))
+                          .catch((e) =>
+                              res.sendStatus(400)
+                          );
             }
         );
 
@@ -243,7 +264,7 @@ class Router {
                 request.status = req.body.status;
                 await request.save();
 
-                chat.updatedContactRequest(request);
+                await chat.updatedContactRequest(request);
 
                 return res.sendStatus(200);
             });
@@ -260,9 +281,6 @@ class Router {
                                     e = e.toObject();
                                     e.user = await Mentor.findById(e.mentorId).then((e) => e.minimalProfile());
                                     delete e.mentorId;
-                                    e.messages = e.messages[0] === undefined
-                                        ? []
-                                        : e.messages.filter(m => m.userId !== req.user._id && !m.isRead);
                                     return e;
                                 }
                             )));
@@ -274,9 +292,6 @@ class Router {
                                     e = e.toObject();
                                     e.user = await Mentee.findById(e.menteeId).then((e) => e.minimalProfile());
                                     delete e.menteeId;
-                                    e.messages = e.messages[0] === undefined
-                                        ? []
-                                        : e.messages.filter(m => m.userId !== req.user._id && !m.isRead);
                                     return e;
                                 }
                             )));
@@ -284,6 +299,16 @@ class Router {
                     default:
                         return res.sendStatus(400);
                 }
+
+                if (results.messages === undefined) {
+                    results.messages = [];
+                } else {
+                    let previewMessage = results.messages.filter(m => m.userId !== req.user._id && !m.isRead);
+                    results.messages = previewMessage.length !== 0
+                        ? previewMessage
+                        : [results.messages[0]];
+                }
+
 
                 return res.status(200).json(results);
             });

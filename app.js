@@ -2,6 +2,7 @@
 
 const createError = require('http-errors');
 const express = require('express');
+const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const passport = require('passport');
@@ -13,6 +14,7 @@ const path = require('path');
 
 //Passport js
 app.use(passport.initialize());
+app.use(bodyParser.json({limit: '2mb'}));
 
 let server = https.createServer(
     {
@@ -28,6 +30,7 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
+
 
 //Routes
 const indexRouter = require('./routes/index');
@@ -64,4 +67,4 @@ server.listen(5001, function () {
     console.log("Listening on port " + 5001 + " ...");
 });
 
-module.exports = {app};
+module.exports = {app: app, directoryPath: __dirname};
