@@ -10,6 +10,7 @@
     "bad-words": "^3.0.2",
     "bcryptjs": "^2.4.3",
     "bluebird": "latest",
+    "body-parser": "latest",
     "bufferutil": "^4.0.1",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
@@ -17,6 +18,7 @@
     "dotenv": "^8.0.0",
     "express": "^4.17.1",
     "express-validator": "^6.1.1",
+    "firebase-admin": "^8.9.2",
     "google-auth-library": "^5.2.1",
     "http-errors": "^1.7.3",
     "lodash": "latest",
@@ -35,8 +37,7 @@
     "socket.io": "^2.3.0",
     "utf-8-validate": "^5.0.2",
     "uuid": "^3.4.0",
-    "validator": "latest",
-      "body-parser": "latest"
+    "validator": "latest"
   },
   "devDependencies": {
     "googleapis": "^41.0.1",

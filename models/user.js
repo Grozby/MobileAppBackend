@@ -111,8 +111,10 @@ let UserSchema = new mongoose.Schema({
     },
     questionsForAcceptingRequest: {
         type: [contactOption.questionsForAcceptingRequestSchema]
-    }
-
+    },
+    fcmToken: {
+        type: String
+    },
     // notification
 }, options);
 

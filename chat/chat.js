@@ -3,7 +3,14 @@
 
 const {AccessToken} = require("../models/user");
 const {ContactMentor} = require("../models/contact");
+const {User} = require('../models/user.js');
+var admin = require('firebase-admin');
+var serviceAccount = require('./../config/mobileapplicationadpcorp-firebase-adminsdk-gl2e4-8db24eae64');
+admin.initializeApp({
 
+    credential: admin.credential.cert(serviceAccount),
+    databaseURL: "https://mobileapplicationadpcorp.firebaseio.com"
+});
 
 class Chat {
 
@@ -63,6 +70,7 @@ class Chat {
         this.io.on('connection', async (socket) => {
             console.log("Client connected");
             let userId = await this.retrieveUserId(socket.handshake.headers.token);
+            let userInfo = await User.findByIdAndUpdate(userId, {fcmToken: socket.handshake.headers.fcmtoken}, {new: true});
             let contacts = await ContactMentor.find({$or: [{menteeId: userId}, {mentorId: userId}]})
                                               .catch(_ => null);
 
@@ -179,6 +187,32 @@ class Chat {
 
                 chatData.contactDoc.messages.splice(0, 0, messageJson);
                 await chatData.contactDoc.save();
+
+                let otherId = userId === chatData.contactDoc.mentorId
+                    ? chatData.contactDoc.menteeId
+                    : chatData.contactDoc.mentorId;
+                let userLean = await User.findById(otherId, 'fcmToken').lean();
+
+                let message = {
+                    notification: {
+                        title: userInfo.name + " " + userInfo.surname,
+                        body: data.content,
+                    },
+                    data: {
+                      when: data.createdAt,
+                    },
+                    token: userLean.fcmToken
+                };
+
+
+                admin.messaging().send(message)
+                     .then((response) => {
+                         // Response is a message ID string.
+                         console.log('Successfully sent message:', response);
+                     })
+                     .catch((error) => {
+                         console.log('Error sending message:', error);
+                     });
 
                 this.io.to(data.chatId).emit('message', messageJson);
                 console.log("Message - Id: " + userId + " - ChatId: " + data.chatId);
