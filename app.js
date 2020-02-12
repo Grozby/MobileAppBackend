@@ -8,7 +8,7 @@ const logger = require('morgan');
 const passport = require('passport');
 const app = express();
 const fs = require('fs');
-const https = require('https');
+const http = require('http');
 const path = require('path');
 
 
@@ -16,10 +16,8 @@ const path = require('path');
 app.use(passport.initialize());
 app.use(bodyParser.json({limit: '2mb'}));
 
-let server = https.createServer(
+let server = http.createServer(
     {
-        key: fs.readFileSync('./config/server.key'),
-        cert: fs.readFileSync('./config/server.crt')
     },
     app
 );

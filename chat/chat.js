@@ -193,26 +193,33 @@ class Chat {
                     : chatData.contactDoc.mentorId;
                 let userLean = await User.findById(otherId, 'fcmToken').lean();
 
-                let message = {
-                    notification: {
-                        title: userInfo.name + " " + userInfo.surname,
-                        body: data.content,
+                let message2 = {
+                    "token":  userLean.fcmToken,
+                    "android": {
+                        "data":
+                            {
+                                "id": chatData.contactDoc.incrementingId,
+                                "title":  userInfo.name + " " + userInfo.surname,
+                                "body": data.content,
+                                "sound": "default",
+                                "image": userInfo.pictureUrl,
+                                "click_action": 'FLUTTER_NOTIFICATION_CLICK'
+                            }
+
                     },
-                    data: {
-                      when: data.createdAt,
-                    },
-                    token: userLean.fcmToken
                 };
 
+                if(message2["token"] !== null){
+                    admin.messaging().send(message2)
+                         .then((response) => {
+                             // Response is a message ID string.
+                             console.log('Successfully sent message:', response);
+                         })
+                         .catch((error) => {
+                             console.log('Error sending message:', error);
+                         });
+                }
 
-                admin.messaging().send(message)
-                     .then((response) => {
-                         // Response is a message ID string.
-                         console.log('Successfully sent message:', response);
-                     })
-                     .catch((error) => {
-                         console.log('Error sending message:', error);
-                     });
 
                 this.io.to(data.chatId).emit('message', messageJson);
                 console.log("Message - Id: " + userId + " - ChatId: " + data.chatId);

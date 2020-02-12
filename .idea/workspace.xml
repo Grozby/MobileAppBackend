@@ -3,10 +3,15 @@
   <component name="ChangeListManager">
     <list default="true" id="f7716513-44c7-454a-ae80-783893c39378" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/chat/chat.js" beforeDir="false" afterPath="$PROJECT_DIR$/chat/chat.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/server.crt" beforeDir="false" afterPath="$PROJECT_DIR$/config/server.crt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/server.key" beforeDir="false" afterPath="$PROJECT_DIR$/config/server.key" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db/mongoose.js" beforeDir="false" afterPath="$PROJECT_DIR$/db/mongoose.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models/contact.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/contact.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/models/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/user.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/Users/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/Users/users.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/contact/contact.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/contact/contact.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -35,7 +40,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="editor.config.ad.shown" value="true" />
     <property name="javascript.nodejs.core.library.configured.version" value="12.14.1" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../Duralande-Tool-1-Demo" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/config" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -50,11 +55,11 @@
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2018.3.4\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\Gabri\Desktop\Works\Mobile-Backend\config" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\Gabri\Desktop\Works\Mobile-Backend\routes\users" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Gabri\Desktop\Works\Mobile-Backend\config" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -189,7 +194,14 @@
       <workItem from="1580981234328" duration="664000" />
       <workItem from="1581008253288" duration="3633000" />
       <workItem from="1581065099698" duration="6552000" />
-      <workItem from="1581108758442" duration="4475000" />
+      <workItem from="1581108758442" duration="8053000" />
+      <workItem from="1581153737331" duration="10498000" />
+      <workItem from="1581245631925" duration="9392000" />
+      <workItem from="1581323783011" duration="13957000" />
+      <workItem from="1581364306340" duration="1987000" />
+      <workItem from="1581412476336" duration="1215000" />
+      <workItem from="1581417251989" duration="4916000" />
+      <workItem from="1581453422214" duration="7214000" />
     </task>
     <servers />
   </component>

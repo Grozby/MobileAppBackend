@@ -42,6 +42,7 @@ let contactMentorSchema = new mongoose.Schema(
         },
         answers: [answerQuestionSchema],
         messages: [messageSchema],
+        incrementingId: {type: String},
     }
 );
 
@@ -57,8 +58,26 @@ contactMentorSchema.options.toObject = {
     }
 };
 
+let counterSchema = new mongoose.Schema({
+    _id: {type: String, required: true, default: "boss"},
+    seq: { type: Number, default: 0 }
+});
+let Counter = mongoose.model('Counter', counterSchema);
+
+contactMentorSchema.pre('save', async function(next) {
+    var doc = this;
+    if(doc.incrementingId === undefined) {
+        let c = await Counter.findOne({_id: "boss"});
+        doc.incrementingId = c.seq;
+        c.seq += 1;
+        await c.save();
+    }
+    next();
+});
+
 let ContactMentor = mongoose.model('ContactMentor', contactMentorSchema);
 
 module.exports = {
-    ContactMentor: ContactMentor
+    ContactMentor: ContactMentor,
+    Counter: Counter,
 };

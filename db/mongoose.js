@@ -1,4 +1,5 @@
 let mongoose = require('mongoose');
+const {Counter} = require("../models/contact");
 const {Mentor} = require("../models/user");
 
 
@@ -299,6 +300,17 @@ async function initializeDatabase () {
                   console.log("pezzii");
               });
     });
+
+    Counter.exists({_id: "boss"})
+           .then(async (doesExist) => {
+               if (!doesExist) {
+                   let counter = new Counter({seq: 2});
+                   await counter.save();
+               }
+           })
+           .catch((_) => {
+               console.log("pezzii counter");
+           });
 
 }
 

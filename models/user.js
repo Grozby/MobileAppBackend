@@ -127,6 +127,7 @@ UserSchema.options.toObject = {
         delete ret.educationList;
         delete ret.experienceList;
         delete ret.password;
+        delete ret.fcmToken;
 
         let socialAccountList = [
             "twitter", "github", "facebook", "linkedin", "instagram"

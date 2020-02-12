@@ -20,7 +20,7 @@ const baseDirectoryPath = require('../../app').directoryPath;
 //-------------------
 
 function saveImage(imageData) {
-    if(imageData.includes("assets/images/")){
+    if (imageData.includes("assets/images/")) {
         return imageData;
     }
 
@@ -194,10 +194,38 @@ class Router {
                         ]);
                         break;
                     case "Mentor":
-                        let contactedMenteesId = await ContactMentor.find({"mentorId": req.user._id})
+                        let contactedMenteesId = await ContactMentor.find({"mentorId": req.user._id, "status": "pending"})
                                                                     .then((list) => list.map((e) => ObjectId(e.menteeId)));
                         results = await Mentee.aggregate([
-                            {"$match": {"_id": {"$in": contactedMenteesId}}},
+                            {$match: {"_id": {"$in": contactedMenteesId}}},
+                            {
+                                $lookup: {
+                                    from: "contactmentors",
+                                    let: {userId: "$_id"},
+                                    pipeline: [
+                                        {
+                                            $addFields:
+                                                {
+                                                    "menteeIdBois": {"$toObjectId": "$menteeId"},
+                                                    "mentorIdBois": {"$toObjectId": "$mentorId"}
+                                                }
+                                        },
+                                        {
+                                            $match:
+                                                {
+                                                    $expr: {
+                                                        $and: [
+                                                            {$eq: ["$menteeIdBois", "$$userId"]},
+                                                            {$eq: ["$mentorIdBois", req.user._id]}
+                                                        ],
+
+                                                    }
+                                                }
+                                        },
+                                    ],
+                                    as: "contactInformation"
+                                }
+                            },
                             {$sample: {size: 7}}
                         ]);
                         break;
@@ -209,6 +237,15 @@ class Router {
                     part.pastExperiences = [...part.educationList, ...part.experienceList];
                     delete part.educationList;
                     delete part.experienceList;
+                    delete part.password;
+                    delete part.fcmToken;
+                    delete part.email;
+                    if(part.contactInformation !== undefined){
+                        part.contactInformation = part.contactInformation[0];
+                        delete part.contactInformation.mentorIdBois;
+                        delete part.contactInformation.menteeIdBois;
+                    }
+
                     this[index] = part;
                 }, results);
 
