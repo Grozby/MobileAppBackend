@@ -28,7 +28,7 @@ $(function () {
     var lastTypingTime;
     var $currentInput = $usernameInput.focus();
 
-    var socket = io("https://localhost:5001",
+    var socket = io("http://localhost:5001",
         {
             'transports': ['polling'],
             transportOptions: {

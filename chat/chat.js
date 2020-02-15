@@ -20,7 +20,7 @@ class Chat {
                                 .catch(_ => null);
     }
 
-    async updatedContactRequest(contact, status) {
+    async updatedContactRequest(contact, mentor) {
         if (contact.status === 'accepted') {
 
             if (this.activeChats.has(contact._id.toString())) {
@@ -40,14 +40,83 @@ class Chat {
             }
 
             if (this.activeSockets.has(contact.menteeId)) {
-                let ac = this.activeSockets.get(contact.menteeId);
-                ac.socket.join(contact._id.toString());
+                let socket = this.activeSockets.get(contact.menteeId);
+                socket.join(contact._id.toString());
             }
 
             this.io.to(contact._id.toString()).emit('updated_contact_request', {
                 'chatId': contact._id.toString(),
                 'status': contact.status,
             })
+        }
+
+        let mentee = await User.findById(contact.menteeId);
+
+        let message2 = {
+            "token":  mentee.fcmToken,
+            "android": {
+                "data":
+                    {
+                        "id": contact.incrementingId,
+                        "title":  mentor.name + " " + mentor.surname + " has " + contact.status + " your request.",
+                        "body": contact.status === "accepted" ? "Chat now with " +  mentor.name + "!"
+                                                              : "Unfortunately, your request has been refused.",
+                        "sound": "default",
+                        "image": mentor.pictureUrl,
+                        "userId": mentee._id.toString(),
+                        "click_action": 'FLUTTER_NOTIFICATION_CLICK'
+                    }
+
+            },
+        };
+
+        if(message2["token"] !== null){
+            admin.messaging().send(message2)
+                 .then((response) => {
+                     // Response is a message ID string.
+                     console.log('Successfully sent message:', response);
+                 })
+                 .catch((error) => {
+                     console.log('Error sending message:', error);
+                 });
+        }
+
+        this.io.to(contact._id.toString()).emit('updated_contact_request', {
+            'chatId': contact._id.toString(),
+            'status': contact.status,
+        })
+    }
+
+    async newContactRequest(contact, mentee) {
+        let mentor = await User.findById(contact.menteeId);
+
+        let message2 = {
+            "token":  mentor.fcmToken,
+            "android": {
+                "data":
+                    {
+                        "id": contact.incrementingId,
+                        "title":  mentee.name + " " + mentee.surname + " contacted you",
+                        "body": "Check it out!",
+                        "sound": "default",
+                        "image": mentee.pictureUrl,
+                        "ryfy_action": "UPDATE",
+                        "click_action": 'FLUTTER_NOTIFICATION_CLICK',
+                        "userId": mentor._id.toString(),
+                    }
+
+            },
+        };
+
+        if(message2["token"] !== null){
+            admin.messaging().send(message2)
+                 .then((response) => {
+                     // Response is a message ID string.
+                     console.log('Successfully sent message:', response);
+                 })
+                 .catch((error) => {
+                     console.log('Error sending message:', error);
+                 });
         }
     }
 
@@ -114,11 +183,14 @@ class Chat {
                     return;
                 }
 
-                let i = 0;
-                while (!chatData.contactDoc.messages[i].isRead && chatData.contactDoc.messages[i].userId !== userId) {
-                    chatData.contactDoc.messages[i].isRead = true;
-                    i += 1;
+                if(chatData.contactDoc.messages !== undefined && chatData.contactDoc.messages.length !== 0){
+                    let i = 0;
+                    while (!chatData.contactDoc.messages[i].isRead && chatData.contactDoc.messages[i].userId !== userId) {
+                        chatData.contactDoc.messages[i].isRead = true;
+                        i += 1;
+                    }
                 }
+
 
                 await chatData.contactDoc.save();
                 chatData.activeUsers.push(userId);
@@ -199,11 +271,14 @@ class Chat {
                         "data":
                             {
                                 "id": chatData.contactDoc.incrementingId,
+                                "chat_id": chatData.contactDoc._id.toString(),
                                 "title":  userInfo.name + " " + userInfo.surname,
                                 "body": data.content,
                                 "sound": "default",
                                 "image": userInfo.pictureUrl,
-                                "click_action": 'FLUTTER_NOTIFICATION_CLICK'
+                                "ryfy_action": "MESSAGE",
+                                "click_action": 'FLUTTER_NOTIFICATION_CLICK',
+                                "userId": otherId,
                             }
 
                     },
