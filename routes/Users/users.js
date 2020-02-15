@@ -179,17 +179,39 @@ class Router {
         );
 
 
-        this.router.get("/explore",
+        this.router.get("/explore/:work_type?",
             config.generalAuth,
             async function (req, res) {
                 let results;
+
+                let availableWorkTypes = [
+                    'Software Engineer',
+                    'Full-Stack',
+                    'Front-End',
+                    'Back-End',
+                    'Machine Learning',
+                    'Python',
+                    'C++',
+                    'iOS',
+                    'Android',
+                    'Mobile Dev.'
+                ];
+                if(req.params.work_type !== undefined && !availableWorkTypes.includes(req.params.work_type)){
+                    return res.sendStatus(400);
+                }
 
                 switch (req.user.kind) {
                     case "Mentee":
                         let contactedMentorsId = await ContactMentor.find({"menteeId": req.user._id})
                                                                     .then((list) => list.map((e) => ObjectId(e.mentorId)));
+                        let matchQueryMentee = {"$match": {
+                                "_id": {"$nin": contactedMentorsId}
+                            }};
+                        if(req.params.work_type !== undefined){
+                            matchQueryMentee["$match"]["workingSpecialization"] = {"$in":[req.params.work_type]}
+                        }
                         results = await Mentor.aggregate([
-                            {"$match": {"_id": {"$nin": contactedMentorsId}}},
+                            matchQueryMentee,
                             {$sample: {size: 7}}
                         ]);
                         break;
@@ -305,6 +327,9 @@ class Router {
                     "answers": answers,
                 });
                 await aq.save();
+
+                await chat.newContactRequest(aq, req.user);
+
                 return res.sendStatus(200);
             });
 
@@ -343,7 +368,7 @@ class Router {
                 request.status = req.body.status;
                 await request.save();
 
-                await chat.updatedContactRequest(request);
+                await chat.updatedContactRequest(request, req.user);
 
                 return res.sendStatus(200);
             });

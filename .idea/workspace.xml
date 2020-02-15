@@ -3,15 +3,9 @@
   <component name="ChangeListManager">
     <list default="true" id="f7716513-44c7-454a-ae80-783893c39378" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/chat/chat.js" beforeDir="false" afterPath="$PROJECT_DIR$/chat/chat.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/server.crt" beforeDir="false" afterPath="$PROJECT_DIR$/config/server.crt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/server.key" beforeDir="false" afterPath="$PROJECT_DIR$/config/server.key" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db/mongoose.js" beforeDir="false" afterPath="$PROJECT_DIR$/db/mongoose.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/contact.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/contact.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/models/user.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/main.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/main.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/Users/users.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/Users/users.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/contact/contact.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/contact/contact.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -201,7 +195,11 @@
       <workItem from="1581364306340" duration="1987000" />
       <workItem from="1581412476336" duration="1215000" />
       <workItem from="1581417251989" duration="4916000" />
-      <workItem from="1581453422214" duration="7214000" />
+      <workItem from="1581453422214" duration="9839000" />
+      <workItem from="1581540128640" duration="9449000" />
+      <workItem from="1581586437023" duration="5134000" />
+      <workItem from="1581613995929" duration="282000" />
+      <workItem from="1581781913573" duration="7528000" />
     </task>
     <servers />
   </component>
